@@ -3,7 +3,6 @@ package de.pauhull.paintwars.listener;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.phase.GamePhase;
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,9 +15,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  * @author pauhull
  */
 public class AsyncPlayerChatListener extends ListenerTemplate {
-
-    @Getter
-    private static final String w = "settings.allow-nether";
 
     public AsyncPlayerChatListener(PaintWars paintWars) {
         super(paintWars);
