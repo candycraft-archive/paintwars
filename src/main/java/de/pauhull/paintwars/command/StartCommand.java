@@ -31,7 +31,7 @@ public class StartCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission(Permissions.START)) {
-            sender.sendMessage(Messages.PREFIX + "Nur §ePremium+ §7Spieler dürfen diesen Befehl benutzen!");
+            sender.sendMessage(Messages.PREFIX + "Nur Spieler ab §dCandyLord§7 dürfen das Spiel starten!");
             return true;
         }
 
