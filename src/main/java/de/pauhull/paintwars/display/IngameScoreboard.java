@@ -122,7 +122,7 @@ public class IngameScoreboard extends NovusScoreboard {
 
                 String name = team != null ? team.name() + player.getName() : ("Z" + player.getName());
                 if (name.length() > 16) {
-                    name = name.substring(16);
+                    name = name.substring(0, 16);
                 }
 
                 if (scoreboard.getTeam(name) != null) {
