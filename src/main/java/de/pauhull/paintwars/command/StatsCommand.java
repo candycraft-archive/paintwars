@@ -75,7 +75,7 @@ public class StatsCommand implements CommandExecutor {
                     coloredBlocks = paintWars.getColoredBlocks().get(uuid).get();
                 }
 
-                sender.sendMessage("§eGefärbt Wollblöcke §8» §7" + format.format(stats.getColoredBlocks() + coloredBlocks));
+                sender.sendMessage("§eGefärbte Wollblöcke §8» §7" + format.format(stats.getColoredBlocks() + coloredBlocks));
                 sender.sendMessage(" ");
 
                 if (playerName == null) {
