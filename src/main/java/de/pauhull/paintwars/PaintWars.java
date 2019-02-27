@@ -13,12 +13,14 @@ import de.pauhull.paintwars.inventory.TeamInventory;
 import de.pauhull.paintwars.listener.*;
 import de.pauhull.paintwars.manager.ItemManager;
 import de.pauhull.paintwars.manager.LocationManager;
+import de.pauhull.paintwars.manager.TopPlayerManager;
 import de.pauhull.paintwars.phase.GamePhaseHandler;
 import de.pauhull.paintwars.util.HeadCache;
 import de.pauhull.paintwars.util.Selection;
 import de.pauhull.paintwars.util.TeleportFix;
-import de.pauhull.scoreboard.NovusScoreboardManager;
+import de.pauhull.scoreboard.ScoreboardManager;
 import de.pauhull.uuidfetcher.spigot.SpigotUUIDFetcher;
+import io.sentry.Sentry;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_8_R3.DedicatedPlayerList;
@@ -65,7 +67,7 @@ public class PaintWars extends JavaPlugin {
     private LocationManager locationManager;
 
     @Getter
-    private NovusScoreboardManager scoreboardManager;
+    private ScoreboardManager scoreboardManager;
 
     @Getter
     private TeamInventory teamInventory;
@@ -107,6 +109,9 @@ public class PaintWars extends JavaPlugin {
     @Getter
     private SpigotUUIDFetcher uuidFetcher;
 
+    @Getter
+    private TopPlayerManager topPlayerManager;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -122,12 +127,13 @@ public class PaintWars extends JavaPlugin {
             maxPlayers.setAccessible(true);
             maxPlayers.set(server, Team.MAX_PLAYERS);
         } catch (ReflectiveOperationException e) {
+            Sentry.capture(e);
             e.printStackTrace();
         }
 
         this.coloredBlocks = new HashMap<>();
         this.locationManager = new LocationManager(this);
-        this.scoreboardManager = new NovusScoreboardManager(this, LobbyScoreboard.class);
+        this.scoreboardManager = new ScoreboardManager(this, LobbyScoreboard.class);
         this.phaseHandler = new GamePhaseHandler();
         this.uuidFetcher = SpigotUUIDFetcher.getInstance();
         this.itemManager = new ItemManager(this);
@@ -154,6 +160,8 @@ public class PaintWars extends JavaPlugin {
             gameArea = new Selection(locationManager.getLocation("pos1"),
                     locationManager.getLocation("pos2"));
         }
+
+        this.topPlayerManager = new TopPlayerManager(this);
 
         new TeleportFix(this, this.getServer());
 
@@ -184,6 +192,8 @@ public class PaintWars extends JavaPlugin {
         new WeatherChangeListener(this);
         new FoodLevelChangeListener(this);
         new PlayerPartyListener(this);
+
+        Sentry.init("https://d1e600da59bd4e90a9303a41bf5b3b83@bugs.morx.me/4");
     }
 
     @Override
@@ -203,6 +213,7 @@ public class PaintWars extends JavaPlugin {
             try {
                 Files.copy(getResource(resource), file.toPath());
             } catch (IOException e) {
+                Sentry.capture(e);
                 e.printStackTrace();
             }
         }

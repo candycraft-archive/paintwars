@@ -7,7 +7,7 @@ import de.pauhull.paintwars.game.Disguises;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.phase.GamePhase;
 import de.pauhull.paintwars.phase.IngamePhase;
-import de.pauhull.scoreboard.NovusScoreboard;
+import de.pauhull.scoreboard.CustomScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -21,9 +21,9 @@ import java.util.Date;
  *
  * @author pauhull
  */
-public class IngameScoreboard extends NovusScoreboard {
+public class IngameScoreboard extends CustomScoreboard {
 
-    private NovusScore uncolored, red = null, green = null, blue = null, yellow = null;
+    private DisplayScore uncolored, red = null, green = null, blue = null, yellow = null;
 
     public IngameScoreboard(Player player) {
         super(player, player.getName() + "_ingame", "§e§lPaint§6§lWars §8| §cLädt...");
@@ -32,24 +32,24 @@ public class IngameScoreboard extends NovusScoreboard {
     @Override
     public void show() {
 
-        new NovusScore().setScore(101);
+        new DisplayScore().setScore(101);
 
-        this.uncolored = new NovusScore(" Ungefärbt: §cLädt...");
+        this.uncolored = new DisplayScore(" Ungefärbt: §cLädt...");
 
         int id = 5;
         if (!Team.RED.getMembers().isEmpty())
-            this.red = new NovusScore(" " + Team.RED.getColoredName() + ": §cLädt...", id--);
+            this.red = new DisplayScore(" " + Team.RED.getColoredName() + ": §cLädt...", id--);
         if (!Team.GREEN.getMembers().isEmpty())
-            this.green = new NovusScore(" " + Team.GREEN.getColoredName() + ": §cLädt...", id--);
+            this.green = new DisplayScore(" " + Team.GREEN.getColoredName() + ": §cLädt...", id--);
         if (!Team.BLUE.getMembers().isEmpty())
-            this.blue = new NovusScore(" " + Team.BLUE.getColoredName() + ": §cLädt...", id--);
+            this.blue = new DisplayScore(" " + Team.BLUE.getColoredName() + ": §cLädt...", id--);
         if (!Team.YELLOW.getMembers().isEmpty())
-            this.yellow = new NovusScore(" " + Team.YELLOW.getColoredName() + ": §cLädt...", id);
+            this.yellow = new DisplayScore(" " + Team.YELLOW.getColoredName() + ": §cLädt...", id);
 
         this.nextScoreID = -1;
-        new NovusScore();
-        new NovusScore("Server:");
-        new NovusScore(" §d§lCandyCraft§7.§dde");
+        new DisplayScore();
+        new DisplayScore("Server:");
+        new DisplayScore(" §d§lCandyCraft§7.§dde");
 
         super.show();
     }
@@ -81,7 +81,7 @@ public class IngameScoreboard extends NovusScoreboard {
         for (Team team : Team.values()) {
             if (IngamePhase.getPercentages().containsKey(team.name())) {
                 double percentage = IngamePhase.getPercentages().get(team.name());
-                NovusScore score = null;
+                DisplayScore score = null;
                 switch (team) {
                     case RED:
                         score = red;

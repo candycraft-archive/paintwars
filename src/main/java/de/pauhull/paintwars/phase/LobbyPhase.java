@@ -3,11 +3,16 @@ package de.pauhull.paintwars.phase;
 import de.pauhull.paintwars.Messages;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Team;
+import de.pauhull.paintwars.listener.PlayerMoveListener;
 import de.pauhull.paintwars.util.ActionBar;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * Created by Paul
@@ -120,6 +125,13 @@ public class LobbyPhase extends GamePhase implements Runnable {
             }
         }
         handler.startPhase(IngamePhase.class);
+        for (List<Block> blocks : PlayerMoveListener.getInstance().getLobbyBlocks().values()) {
+            for (Block block : blocks) {
+                block.setType(Material.BARRIER);
+                block.setData((byte) 0);
+            }
+        }
+        PlayerMoveListener.getInstance().getLobbyBlocks().clear();
     }
 
 }

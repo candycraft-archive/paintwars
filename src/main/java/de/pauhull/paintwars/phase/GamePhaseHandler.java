@@ -1,5 +1,6 @@
 package de.pauhull.paintwars.phase;
 
+import io.sentry.Sentry;
 import lombok.Getter;
 
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +40,7 @@ public class GamePhaseHandler {
             return genericPhase;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
+            Sentry.capture(e);
             return null;
         }
     }

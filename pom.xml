@@ -13,9 +13,19 @@
             <id>TimoCloud-API</id>
             <url>https://maven.timo.cloud/repository/TimoCloud-API/</url>
         </repository>
+        <repository>
+            <id>candycraft-repo</id>
+            <url>https://repo.morx.me/repository/internal</url>
+        </repository>
     </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry</artifactId>
+            <version>1.7.5</version>
+        </dependency>
 
         <dependency>
             <groupId>de.pauhull</groupId>
@@ -60,7 +70,14 @@
 
         <dependency>
             <groupId>de.pauhull</groupId>
-            <artifactId>scoreboard</artifactId>
+            <artifactId>npc-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.pauhull</groupId>
+            <artifactId>scoreboard-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

@@ -2,6 +2,7 @@ package de.pauhull.paintwars.manager;
 
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.util.TimedHashMap;
+import io.sentry.Sentry;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -36,6 +37,7 @@ public class LocationManager {
         try {
             config.save(file);
         } catch (IOException e) {
+            Sentry.capture(e);
             e.printStackTrace();
         }
     }

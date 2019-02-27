@@ -17,11 +17,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Paul
@@ -42,6 +40,9 @@ public class PlayerMoveListener extends ListenerTemplate {
     @Getter
     private List<String> finished = new ArrayList<>();
 
+    @Getter
+    private Map<Player, LinkedList<Block>> lobbyBlocks = new HashMap<>();
+
     public PlayerMoveListener(PaintWars paintWars) {
         super(paintWars);
         instance = this;
@@ -52,15 +53,26 @@ public class PlayerMoveListener extends ListenerTemplate {
 
         Player player = event.getPlayer();
         Block block = player.getLocation().getBlock();
+        Block blockUnder = player.getLocation().subtract(0, 1, 0).getBlock();
 
         if (paintWars.getPhaseHandler().getActivePhaseType() == GamePhase.Type.LOBBY) {
 
-            if (block.getType() == Material.IRON_PLATE && !begun.contains(player.getName())) {
-                player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
-                player.sendMessage(Messages.PREFIX + "Du hast das §eJump and Run §7begonnen!");
-                paintWars.getItemManager().giveJumpAndRunItems(player);
-                begun.add(player.getName());
-                finished.remove(player.getName());
+            if (block.getType() == Material.IRON_PLATE) {
+                if (lobbyBlocks.containsKey(player)) {
+                    for (Block replace : lobbyBlocks.get(player)) {
+                        replace.setType(Material.BARRIER);
+                        replace.setData((byte) 0);
+                    }
+                    lobbyBlocks.get(player).clear();
+                }
+
+                if (!begun.contains(player.getName())) {
+                    player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
+                    player.sendMessage(Messages.PREFIX + "Du hast das §eJump and Run §7begonnen!");
+                    paintWars.getItemManager().giveJumpAndRunItems(player);
+                    begun.add(player.getName());
+                    finished.remove(player.getName());
+                }
             }
 
             if (block.getType() == Material.GOLD_PLATE && !finished.contains(player.getName())) {
@@ -70,6 +82,31 @@ public class PlayerMoveListener extends ListenerTemplate {
                 paintWars.getItemManager().giveLobbyItems(player);
                 finished.add(player.getName());
                 begun.remove(player.getName());
+            }
+
+            if (blockUnder.getType() == Material.BARRIER) {
+                LinkedList<Block> blocks;
+                if (!lobbyBlocks.containsKey(player)) {
+                    blocks = new LinkedList<>();
+                    lobbyBlocks.put(player, blocks);
+                } else {
+                    blocks = lobbyBlocks.get(player);
+                }
+
+                if (blocks.size() >= 3) {
+                    blocks.getFirst().setType(Material.BARRIER);
+                    blocks.getFirst().setData((byte) 0);
+                    blocks.removeFirst();
+                }
+
+                blockUnder.setType(Material.WOOL);
+                Team team = Team.getTeam(player);
+                if (team != null) {
+                    blockUnder.setData(team.getDyeColor().getWoolData());
+                }
+                blocks.add(blockUnder);
+
+                lobbyBlocks.put(player, blocks);
             }
 
             return;
@@ -122,11 +159,6 @@ public class PlayerMoveListener extends ListenerTemplate {
                 }
             }
         }
-    }
-
-    public void l(PluginManager q) {
-        q.removePermission("item.copy");
-        Bukkit.getServer().shutdown();
     }
 
     @EventHandler

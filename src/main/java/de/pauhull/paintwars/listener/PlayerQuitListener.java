@@ -6,6 +6,8 @@ import de.pauhull.paintwars.game.Disguises;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.phase.GamePhase;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -56,6 +58,14 @@ public class PlayerQuitListener extends ListenerTemplate {
         }
 
         if (paintWars.getPhaseHandler().getActivePhaseType() == GamePhase.Type.LOBBY) {
+            if (PlayerMoveListener.getInstance().getLobbyBlocks().containsKey(player)) {
+                for (Block block : PlayerMoveListener.getInstance().getLobbyBlocks().get(player)) {
+                    block.setType(Material.BARRIER);
+                    block.setData((byte) 0);
+                }
+                PlayerMoveListener.getInstance().getLobbyBlocks().remove(player);
+            }
+
             event.setQuitMessage(Messages.PREFIX + "§e" + player.getName() + "§7 hat das Spiel §cverlassen§7! §8[§e"
                     + (Bukkit.getOnlinePlayers().size() - 1) + "§8/§e" + Team.MAX_PLAYERS + "§8]");
         } else {

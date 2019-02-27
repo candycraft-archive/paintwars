@@ -59,17 +59,14 @@ public class PlayerInteractListener extends ListenerTemplate {
             } else if (stack.equals(ItemManager.BACK)) {
                 paintWars.getLocationManager().teleport(player, "JumpAndRun");
                 player.playSound(player.getLocation(), Sound.BAT_DEATH, 1, 1);
-                player.getInventory().setItem(3, ItemManager.WAIT);
+                player.getInventory().setItem(4, ItemManager.WAIT);
                 Bukkit.getScheduler().scheduleSyncDelayedTask(paintWars, () -> {
-                    if (player.getInventory().getItem(3) != null && player.getInventory().getItem(3).equals(ItemManager.WAIT)) {
-                        player.getInventory().setItem(3, ItemManager.BACK);
+                    if (player.getInventory().getItem(4) != null && player.getInventory().getItem(4).equals(ItemManager.WAIT)) {
+                        player.getInventory().setItem(4, ItemManager.BACK);
                     }
                 }, 20);
             } else if (stack.equals(ItemManager.TEAM_SELECT)) {
                 paintWars.getTeamInventory().show(player);
-            } else if (stack.equals(ItemManager.START_GAME)) {
-                player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
-                Bukkit.dispatchCommand(player, "start");
             }
         }
     }

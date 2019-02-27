@@ -1,6 +1,7 @@
 package de.pauhull.paintwars.data;
 
 import de.pauhull.paintwars.PaintWars;
+import io.sentry.Sentry;
 import org.bukkit.Bukkit;
 
 import java.sql.*;
@@ -34,7 +35,7 @@ public class MySQL {
         } catch (SQLException e) {
             Bukkit.getConsoleSender().sendMessage("§cKonnte nicht zur MySQL verbinden: " + e.getMessage());
             Bukkit.getPluginManager().disablePlugin(PaintWars.getInstance());
-
+            Sentry.capture(e);
             return false;
         }
     }
@@ -45,6 +46,7 @@ public class MySQL {
                 connection.close();
             }
         } catch (SQLException e) {
+            Sentry.capture(e);
             Bukkit.getConsoleSender().sendMessage("§cMySQL konnte nicht beendet werden.");
         }
     }
@@ -55,6 +57,7 @@ public class MySQL {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
+            Sentry.capture(e);
         }
     }
 
@@ -64,6 +67,7 @@ public class MySQL {
             return statement.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
+            Sentry.capture(e);
             return null;
         }
     }
@@ -72,6 +76,7 @@ public class MySQL {
         try {
             return connection.prepareStatement(sql);
         } catch (SQLException e) {
+            Sentry.capture(e);
             e.printStackTrace();
             return null;
         }

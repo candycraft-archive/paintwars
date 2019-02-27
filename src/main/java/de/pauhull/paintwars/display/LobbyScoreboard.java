@@ -4,7 +4,7 @@ import de.pauhull.friends.common.party.Party;
 import de.pauhull.friends.spigot.SpigotFriends;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Team;
-import de.pauhull.scoreboard.NovusScoreboard;
+import de.pauhull.scoreboard.CustomScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,9 +16,9 @@ import org.bukkit.entity.Player;
  *
  * @author pauhull
  */
-public class LobbyScoreboard extends NovusScoreboard {
+public class LobbyScoreboard extends CustomScoreboard {
 
-    private NovusScore online, team;
+    private DisplayScore online, team;
 
     public LobbyScoreboard(Player player) {
         super(player, player.getName() + "_lobby", "§5§lWarten auf Spielstart...");
@@ -27,15 +27,15 @@ public class LobbyScoreboard extends NovusScoreboard {
 
     @Override
     public void show() {
-        new NovusScore(" §d§lCandyCraft§7.§dde");
-        new NovusScore("§fServer:");
-        new NovusScore();
-        this.team = new NovusScore(" §7Lädt...");
-        new NovusScore("§fTeam:");
-        new NovusScore();
-        this.online = new NovusScore(" §aLädt...");
-        new NovusScore("§fOnline:");
-        new NovusScore();
+        new DisplayScore(" §d§lCandyCraft§7.§dde");
+        new DisplayScore("§fServer:");
+        new DisplayScore();
+        this.team = new DisplayScore(" §7Lädt...");
+        new DisplayScore("§fTeam:");
+        new DisplayScore();
+        this.online = new DisplayScore(" §aLädt...");
+        new DisplayScore("§fOnline:");
+        new DisplayScore();
 
         super.show();
     }
