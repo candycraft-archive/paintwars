@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -35,10 +36,10 @@ public class PlayerMoveListener extends ListenerTemplate {
     private static PlayerMoveListener instance;
 
     @Getter
-    private List<String> begun = new ArrayList<>();
+    private Map<Player, Integer> jumpAndRunCheckpoints = new HashMap<>();
 
     @Getter
-    private List<String> finished = new ArrayList<>();
+    private List<Player> jumpAndRunFinished = new ArrayList<>();
 
     @Getter
     private Map<Player, LinkedList<Block>> lobbyBlocks = new HashMap<>();
@@ -53,7 +54,6 @@ public class PlayerMoveListener extends ListenerTemplate {
 
         Player player = event.getPlayer();
         Block block = player.getLocation().getBlock();
-        Block blockUnder = player.getLocation().subtract(0, 1, 0).getBlock();
 
         if (paintWars.getPhaseHandler().getActivePhaseType() == GamePhase.Type.LOBBY) {
 
@@ -66,25 +66,48 @@ public class PlayerMoveListener extends ListenerTemplate {
                     lobbyBlocks.get(player).clear();
                 }
 
-                if (!begun.contains(player.getName())) {
+                if (!jumpAndRunCheckpoints.containsKey(player)) {
                     player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
                     player.sendMessage(Messages.PREFIX + "Du hast das §eJump and Run §7begonnen!");
                     paintWars.getItemManager().giveJumpAndRunItems(player);
-                    begun.add(player.getName());
-                    finished.remove(player.getName());
+                    jumpAndRunCheckpoints.put(player, 0);
+                    jumpAndRunFinished.remove(player);
                 }
             }
 
-            if (block.getType() == Material.GOLD_PLATE && !finished.contains(player.getName())) {
+            if (block.getType() == Material.GOLD_PLATE && !jumpAndRunFinished.contains(player)) {
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
                 player.sendMessage(Messages.PREFIX + "Du hast das Jump and Run §ageschafft§7!");
                 RandomFireworkGenerator.shootRandomFirework(player.getLocation(), 5);
                 paintWars.getItemManager().giveLobbyItems(player);
-                finished.add(player.getName());
-                begun.remove(player.getName());
+                jumpAndRunFinished.add(player);
+                jumpAndRunCheckpoints.remove(player);
             }
 
+            if (block.getType() == Material.WOOD_PLATE && jumpAndRunCheckpoints.containsKey(player)) {
+                Block signBlock = block.getLocation().subtract(0, 2, 0).getBlock();
+                if (signBlock.getType() == Material.SIGN_POST || signBlock.getType() == Material.WALL_SIGN) {
+                    Sign sign = (Sign) signBlock.getState();
+                    int checkpointId = Integer.parseInt(sign.getLine(0).replace("[CP-", "").replace("]", ""));
+                    int currentCheckpointId = jumpAndRunCheckpoints.get(player);
+                    if (checkpointId != currentCheckpointId) {
+                        jumpAndRunCheckpoints.put(player, checkpointId);
+                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
+                        player.sendMessage(Messages.PREFIX + "Du hast §aCheckpoint " + checkpointId + "§7 erreicht!");
+                    }
+                }
+            }
+
+            Block barrierBlock = null;
+            Block blockUnder = player.getLocation().subtract(0, 1, 0).getBlock();
+            Block blockUnderBlockUnder = player.getLocation().subtract(0, 1.3, 0).getBlock();
             if (blockUnder.getType() == Material.BARRIER) {
+                barrierBlock = blockUnder;
+            } else if (blockUnderBlockUnder.getType() == Material.BARRIER) {
+                barrierBlock = blockUnderBlockUnder;
+            }
+
+            if (barrierBlock != null && !jumpAndRunCheckpoints.containsKey(player)) {
                 LinkedList<Block> blocks;
                 if (!lobbyBlocks.containsKey(player)) {
                     blocks = new LinkedList<>();
@@ -99,12 +122,19 @@ public class PlayerMoveListener extends ListenerTemplate {
                     blocks.removeFirst();
                 }
 
-                blockUnder.setType(Material.WOOL);
+                barrierBlock.setType(Material.WOOL);
                 Team team = Team.getTeam(player);
                 if (team != null) {
-                    blockUnder.setData(team.getDyeColor().getWoolData());
+                    barrierBlock.setData(team.getDyeColor().getWoolData());
                 }
-                blocks.add(blockUnder);
+                blocks.add(barrierBlock);
+                final Block finalBarrierBlock = barrierBlock;
+                Bukkit.getScheduler().scheduleSyncDelayedTask(paintWars, () -> {
+                    if (finalBarrierBlock.getType() == Material.WOOL && player.getLocation().distanceSquared(finalBarrierBlock.getLocation().add(0.5, 1, 0.5)) > 0.75 * 0.75) {
+                        finalBarrierBlock.setType(Material.BARRIER);
+                        finalBarrierBlock.setData((byte) 0);
+                    }
+                }, 15);
 
                 lobbyBlocks.put(player, blocks);
             }
@@ -163,8 +193,9 @@ public class PlayerMoveListener extends ListenerTemplate {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        begun.remove(event.getPlayer().getName());
-        finished.remove(event.getPlayer().getName());
+        Player player = event.getPlayer();
+        jumpAndRunCheckpoints.remove(player);
+        jumpAndRunFinished.remove(player);
     }
 
     public BlockFace yawToFace(float yaw) {

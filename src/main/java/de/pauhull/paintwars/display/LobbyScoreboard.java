@@ -1,5 +1,6 @@
 package de.pauhull.paintwars.display;
 
+import cloud.timo.TimoCloud.api.TimoCloudAPI;
 import de.pauhull.friends.common.party.Party;
 import de.pauhull.friends.spigot.SpigotFriends;
 import de.pauhull.paintwars.PaintWars;
@@ -29,6 +30,9 @@ public class LobbyScoreboard extends CustomScoreboard {
     public void show() {
         new DisplayScore(" §d§lCandyCraft§7.§dde");
         new DisplayScore("§fServer:");
+        new DisplayScore();
+        new DisplayScore(" §c" + TimoCloudAPI.getBukkitAPI().getThisServer().getMap());
+        new DisplayScore("§fMap:");
         new DisplayScore();
         this.team = new DisplayScore(" §7Lädt...");
         new DisplayScore("§fTeam:");

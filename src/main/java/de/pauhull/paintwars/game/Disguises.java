@@ -4,6 +4,7 @@ import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.phase.GamePhase;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -22,7 +23,9 @@ public class Disguises {
         Team team = findTeamToDisguise(player);
         if (team != null) {
             disguises.put(player, team);
-            team.giveArmor(player);
+            if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                team.giveArmor(player);
+            }
             PaintWars.getInstance().getScoreboardManager().updateTeam(player);
         }
         return team;

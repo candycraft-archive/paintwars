@@ -25,6 +25,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.v1_8_R3.DedicatedPlayerList;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
@@ -112,6 +116,9 @@ public class PaintWars extends JavaPlugin {
     @Getter
     private TopPlayerManager topPlayerManager;
 
+    @Getter
+    private List<Block> woolBlocks;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -160,6 +167,7 @@ public class PaintWars extends JavaPlugin {
             gameArea = new Selection(locationManager.getLocation("pos1"),
                     locationManager.getLocation("pos2"));
         }
+        this.woolBlocks = countWoolBlocks(gameArea);
 
         this.topPlayerManager = new TopPlayerManager(this);
 
@@ -222,6 +230,32 @@ public class PaintWars extends JavaPlugin {
     private YamlConfiguration copyAndLoad(String resource, File file) {
         copy(resource, file, false);
         return YamlConfiguration.loadConfiguration(file);
+    }
+
+    private List<Block> countWoolBlocks(Selection selection) {
+        List<Block> blocks = new ArrayList<>();
+        if (selection == null) return blocks;
+        World world = selection.getA().getWorld();
+        double minX = Math.min(selection.getA().getX(), selection.getB().getX());
+        double minY = Math.min(selection.getA().getY(), selection.getB().getY());
+        double minZ = Math.min(selection.getA().getZ(), selection.getB().getZ());
+        double maxX = Math.max(selection.getA().getX(), selection.getB().getX());
+        double maxY = Math.max(selection.getA().getY(), selection.getB().getY());
+        double maxZ = Math.max(selection.getA().getZ(), selection.getB().getZ());
+
+        for (double x = minX; x <= maxX; x++) {
+            for (double y = minY; y <= maxY; y++) {
+                for (double z = minZ; z <= maxZ; z++) {
+                    Block block = new Location(world, x, y, z).getBlock();
+
+                    if (block.getType() == Material.WOOL) {
+                        blocks.add(block);
+                    }
+                }
+            }
+        }
+
+        return blocks;
     }
 
 }

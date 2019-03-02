@@ -5,6 +5,7 @@ import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.manager.ItemManager;
 import de.pauhull.paintwars.phase.GamePhase;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,15 +50,22 @@ public class PlayerInteractListener extends ListenerTemplate {
         if (paintWars.getPhaseHandler().getActivePhaseType() == GamePhase.Type.LOBBY && event.getItem() != null) {
             if (stack.equals(ItemManager.LEAVE)) {
                 player.kickPlayer("");
+            } else if (stack.getType() == Material.WRITTEN_BOOK) {
+                event.setCancelled(false);
             } else if (stack.equals(ItemManager.LEAVE_JAR)) {
                 player.sendMessage(Messages.PREFIX + "Du hast das Jump and Run §cverlassen§7.");
                 paintWars.getItemManager().giveLobbyItems(player);
                 paintWars.getLocationManager().teleport(player, "Lobby");
                 player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
-                PlayerMoveListener.getInstance().getBegun().remove(player.getName());
-                PlayerMoveListener.getInstance().getFinished().remove(player.getName());
-            } else if (stack.equals(ItemManager.BACK)) {
-                paintWars.getLocationManager().teleport(player, "JumpAndRun");
+                PlayerMoveListener.getInstance().getJumpAndRunCheckpoints().remove(player);
+                PlayerMoveListener.getInstance().getJumpAndRunFinished().remove(player);
+            } else if (stack.equals(ItemManager.BACK) && PlayerMoveListener.getInstance().getJumpAndRunCheckpoints().containsKey(player)) {
+                int checkpointId = PlayerMoveListener.getInstance().getJumpAndRunCheckpoints().get(player);
+                if (checkpointId == 0) {
+                    paintWars.getLocationManager().teleport(player, "JumpAndRun");
+                } else {
+                    paintWars.getLocationManager().teleport(player, "cp" + checkpointId);
+                }
                 player.playSound(player.getLocation(), Sound.BAT_DEATH, 1, 1);
                 player.getInventory().setItem(4, ItemManager.WAIT);
                 Bukkit.getScheduler().scheduleSyncDelayedTask(paintWars, () -> {

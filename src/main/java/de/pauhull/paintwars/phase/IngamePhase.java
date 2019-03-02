@@ -8,7 +8,6 @@ import de.pauhull.paintwars.display.IngameScoreboard;
 import de.pauhull.paintwars.game.Powerup;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.util.ActionBar;
-import de.pauhull.paintwars.util.Selection;
 import de.pauhull.paintwars.util.Title;
 import de.pauhull.utils.misc.RandomFireworkGenerator;
 import lombok.Getter;
@@ -43,9 +42,13 @@ public class IngamePhase extends GamePhase {
 
     private int nextPowerupTime;
 
+    @Getter
+    private List<Block> woolBlocks;
+
     public IngamePhase(GamePhaseHandler handler) {
         super(handler);
         this.nextPowerupTime = chooseNextPowerupTime();
+        this.woolBlocks = PaintWars.getInstance().getWoolBlocks();
     }
 
     @Override
@@ -78,9 +81,7 @@ public class IngamePhase extends GamePhase {
             }
         }
 
-        /*if(time % 1 == 0) {*/
         countBlocks();
-        /*}*/
 
         for (Team team : Team.values()) {
             for (Player player : team.getMembers()) {
@@ -106,6 +107,32 @@ public class IngamePhase extends GamePhase {
         PaintWars.getInstance().getScoreboardManager().setScoreboard(IngameScoreboard.class);
         countBlocks();
         super.start();
+    }
+
+    private void countBlocks() {
+        double uncolored = 0, red = 0, green = 0, blue = 0, yellow = 0;
+        for (Block block : woolBlocks) {
+            if (block.getType() == Material.WOOL) {
+                if (block.getData() == Team.RED.getDyeColor().getWoolData()) {
+                    red++;
+                } else if (block.getData() == Team.GREEN.getDyeColor().getWoolData()) {
+                    green++;
+                } else if (block.getData() == Team.BLUE.getDyeColor().getWoolData()) {
+                    blue++;
+                } else if (block.getData() == Team.YELLOW.getDyeColor().getWoolData()) {
+                    yellow++;
+                } else {
+                    uncolored++;
+                }
+            }
+        }
+        double total = uncolored + red + green + blue + yellow;
+
+        percentages.put("UNCOLORED", uncolored / total);
+        percentages.put(Team.RED.name(), red / total);
+        percentages.put(Team.GREEN.name(), green / total);
+        percentages.put(Team.BLUE.name(), blue / total);
+        percentages.put(Team.YELLOW.name(), yellow / total);
     }
 
     @Override
@@ -172,26 +199,6 @@ public class IngamePhase extends GamePhase {
         PaintWars.getInstance().getScoreboardManager().updateTitle("§e§lPaint§6§lWars §8| §7Ende");
 
         handler.startPhase(EndPhase.class).setStartTime(startTime);
-    }
-
-    private void countBlocks() {
-        Selection selection = PaintWars.getInstance().getGameArea();
-
-        if (selection != null) {
-            List<Block> blocks = selection.getBlocks();
-            int uncolored = Selection.countBlocks(blocks, Material.WOOL, (short) 0);
-            int red = Selection.countBlocks(blocks, Material.WOOL, Team.RED.getDyeColor().getWoolData());
-            int green = Selection.countBlocks(blocks, Material.WOOL, Team.GREEN.getDyeColor().getWoolData());
-            int blue = Selection.countBlocks(blocks, Material.WOOL, Team.BLUE.getDyeColor().getWoolData());
-            int yellow = Selection.countBlocks(blocks, Material.WOOL, Team.YELLOW.getDyeColor().getWoolData());
-            int total = uncolored + red + green + blue + yellow;
-
-            percentages.put("UNCOLORED", uncolored / (double) total);
-            percentages.put(Team.RED.name(), red / (double) total);
-            percentages.put(Team.GREEN.name(), green / (double) total);
-            percentages.put(Team.BLUE.name(), blue / (double) total);
-            percentages.put(Team.YELLOW.name(), yellow / (double) total);
-        }
     }
 
     private int chooseNextPowerupTime() {
