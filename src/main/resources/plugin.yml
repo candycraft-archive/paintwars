@@ -3,7 +3,7 @@ name: PaintWars
 version: 1.0
 main: de.pauhull.paintwars.PaintWars
 depend: [TimoCloud]
-softdepend: [iDisguise, Multiverse-Core, NickAPI, Friends, NpcApi]
+softdepend: [Multiverse-Core, NickAPI, Friends, NpcApi]
 
 commands:
   setlocation:
