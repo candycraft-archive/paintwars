@@ -22,7 +22,7 @@ public class LobbyScoreboard extends CustomScoreboard {
     private DisplayScore online, team;
 
     public LobbyScoreboard(Player player) {
-        super(player, player.getName() + "_lobby", "§5§lWarten auf Spielstart...");
+        super(player, player.getName() + "_lobby", "§5§lPaintWars Lobby");
         this.descending = false;
     }
 
