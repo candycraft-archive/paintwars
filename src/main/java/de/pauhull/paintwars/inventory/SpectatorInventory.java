@@ -58,7 +58,7 @@ public class SpectatorInventory implements Listener {
             inventory.setItem(slot++, stack);
         }
 
-        player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 1, 1);
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
         player.openInventory(inventory);
     }
 
@@ -77,14 +77,14 @@ public class SpectatorInventory implements Listener {
         if (stack != null) {
             if (stack.getType() == Material.SKULL_ITEM && stack.getDurability() == 3) {
                 SkullMeta meta = (SkullMeta) stack.getItemMeta();
-                String owner = meta.getOwner();
+                String owner = meta.getOwningPlayer().getName();
                 Player spectate = Bukkit.getPlayer(owner);
                 if (spectate != null) {
                     player.closeInventory();
                     player.teleport(spectate.getLocation());
-                    player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
                 } else {
-                    player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
                 }
             }
         }

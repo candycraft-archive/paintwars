@@ -38,8 +38,8 @@ public class StatsCommand implements CommandExecutor {
                 sender.sendMessage(Messages.PREFIX + Messages.ONLY_PLAYERS);
             }
         } else {
-            paintWars.getUuidFetcher().fetchProfileAsync(args[0], profile -> {
-                sendStats(sender, profile.getUuid(), profile.getPlayerName());
+            paintWars.getUuidFetcher().fetchProfile(args[0], (uuid, name) -> {
+                sendStats(sender, uuid, name);
             });
         }
 

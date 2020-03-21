@@ -1,7 +1,7 @@
 package de.pauhull.paintwars.phase;
 
-import cloud.timo.TimoCloud.api.TimoCloudAPI;
-import de.godtitan.coins.CoinAPI;
+import de.dytanic.cloudnet.bridge.CloudServer;
+import de.dytanic.cloudnet.lib.server.ServerState;
 import de.pauhull.paintwars.Messages;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.display.IngameScoreboard;
@@ -11,6 +11,8 @@ import de.pauhull.paintwars.util.ActionBar;
 import de.pauhull.paintwars.util.Title;
 import de.pauhull.utils.misc.RandomFireworkGenerator;
 import lombok.Getter;
+import net.mcstats2.mcmoney.manager.MCMoneyManager;
+import net.mcstats2.mcmoney.manager.MCMoneyType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -77,7 +79,7 @@ public class IngamePhase extends GamePhase {
             }
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
             }
         }
 
@@ -93,12 +95,13 @@ public class IngamePhase extends GamePhase {
     @Override
     public void start() {
 
-        TimoCloudAPI.getBukkitAPI().getThisServer().setState("INGAME");
+
+        CloudServer.getInstance().setServerState(ServerState.INGAME);
 
         for (Team team : Team.values()) {
             for (Player player : team.getMembers()) {
                 PaintWars.getInstance().getLocationManager().teleport(player, team.name());
-                player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                 PaintWars.getInstance().getItemManager().giveIngameItems(player);
                 Title.sendTitle(player, "§8× §e§lPaint§6§lWars§8 ×", "§7Das Spiel §abeginnt§7!", 0, 40, 20);
             }
@@ -157,7 +160,7 @@ public class IngamePhase extends GamePhase {
             Title.sendTitle(player, "§7Team " + team.getColoredName() + " §7hat das Spiel §agewonnen§7!",
                     team.getMembers().contains(player) ? "§a+§775 Coins" : "", 0, 40, 20);
             if (team.getMembers().contains(player)) {
-                CoinAPI.getInstance().addCoins(player.getUniqueId(), 75);
+                MCMoneyManager.getInstance().getProfile(player.getUniqueId()).deposit(MCMoneyType.COINS, 75);
                 PaintWars.getInstance().getWinningPlayers().add(player.getUniqueId());
             }
 

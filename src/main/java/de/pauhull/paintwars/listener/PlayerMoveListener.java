@@ -1,16 +1,12 @@
 package de.pauhull.paintwars.listener;
 
-import com.darkblade12.particleeffect.ParticleEffect;
 import de.pauhull.paintwars.Messages;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.phase.GamePhase;
 import de.pauhull.utils.misc.RandomFireworkGenerator;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -18,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -67,7 +64,7 @@ public class PlayerMoveListener extends ListenerTemplate {
                 }
 
                 if (!jumpAndRunCheckpoints.containsKey(player)) {
-                    player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
                     player.sendMessage(Messages.PREFIX + "Du hast das §eJump and Run §7begonnen!");
                     paintWars.getItemManager().giveJumpAndRunItems(player);
                     jumpAndRunCheckpoints.put(player, 0);
@@ -76,7 +73,7 @@ public class PlayerMoveListener extends ListenerTemplate {
             }
 
             if (block.getType() == Material.GOLD_PLATE && !jumpAndRunFinished.contains(player)) {
-                player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                 player.sendMessage(Messages.PREFIX + "Du hast das Jump and Run §ageschafft§7!");
                 RandomFireworkGenerator.shootRandomFirework(player.getLocation(), 5);
                 paintWars.getItemManager().giveLobbyItems(player);
@@ -92,7 +89,7 @@ public class PlayerMoveListener extends ListenerTemplate {
                     int currentCheckpointId = jumpAndRunCheckpoints.get(player);
                     if (checkpointId != currentCheckpointId) {
                         jumpAndRunCheckpoints.put(player, checkpointId);
-                        player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
+                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
                         player.sendMessage(Messages.PREFIX + "Du hast §aCheckpoint " + checkpointId + "§7 erreicht!");
                     }
                 }
@@ -158,11 +155,12 @@ public class PlayerMoveListener extends ListenerTemplate {
                 player.setFlying(true);
                 player.setFallDistance(0.0F);
 
-                ParticleEffect.BLOCK_DUST.display(new ParticleEffect.BlockData(facingBlock.getType(), facingBlock.getData()),
-                        0.25f, 0.25f, 0.25f, 0f, 5, player.getLocation(), Bukkit.getOnlinePlayers().toArray(new Player[0]));
+                facingBlock.getWorld().spawnParticle(Particle.BLOCK_CRACK, facingBlock.getLocation(),
+                        5, 0.25f, 0.25f, 0.25f,
+                        new MaterialData(facingBlock.getType(), facingBlock.getData()));
 
                 if (Math.random() <= 0.20) { // 20%
-                    player.getWorld().playSound(player.getLocation(), Sound.SLIME_WALK, 1, 1f /*+ (float) Math.random() * 0.5f*/);
+                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SLIME_JUMP, 1, 1f);
                 }
             } else {
                 player.setFlying(false);

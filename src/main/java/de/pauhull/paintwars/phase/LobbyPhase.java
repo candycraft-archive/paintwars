@@ -1,5 +1,7 @@
 package de.pauhull.paintwars.phase;
 
+import de.dytanic.cloudnet.bridge.CloudServer;
+import de.dytanic.cloudnet.lib.server.ServerState;
 import de.pauhull.paintwars.Messages;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Team;
@@ -26,20 +28,16 @@ public class LobbyPhase extends GamePhase implements Runnable {
     private Type type = Type.LOBBY;
 
     private int countdown;
-    private int second;
 
     public LobbyPhase(GamePhaseHandler handler) {
         super(handler);
-    }
-
-    private static String _p() {
-        return "";
     }
 
     @Override
     public void start() {
         super.start();
         countdown = -1;
+        CloudServer.getInstance().setServerState(ServerState.LOBBY);
     }
 
     @Override
@@ -90,10 +88,10 @@ public class LobbyPhase extends GamePhase implements Runnable {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (countdown == 1) {
-                    player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 2);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 2);
                     ActionBar.sendActionBar(player, "Noch §eeine §fSekunde");
                 } else {
-                    player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
                     ActionBar.sendActionBar(player, "Noch §e" + countdown + " §fSekunden");
                 }
             }

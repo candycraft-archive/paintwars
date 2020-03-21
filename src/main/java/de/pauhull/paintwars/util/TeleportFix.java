@@ -1,10 +1,10 @@
 package de.pauhull.paintwars.util;
 
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

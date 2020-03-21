@@ -1,7 +1,6 @@
 package de.pauhull.paintwars.data.table;
 
 import de.pauhull.paintwars.data.MySQL;
-import io.sentry.Sentry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,7 +40,6 @@ public class StatsTable {
                 consumer.accept(uuids);
 
             } catch (SQLException e) {
-                Sentry.capture(e);
                 consumer.accept(new ArrayList<>());
                 e.printStackTrace();
             }
@@ -65,7 +63,6 @@ public class StatsTable {
                 consumer.accept(-1);
 
             } catch (SQLException e) {
-                Sentry.capture(e);
                 e.printStackTrace();
                 consumer.accept(-1);
             }
@@ -91,7 +88,6 @@ public class StatsTable {
                 consumer.accept(null);
 
             } catch (SQLException e) {
-                Sentry.capture(e);
                 e.printStackTrace();
                 consumer.accept(null);
             }

@@ -1,14 +1,11 @@
 package de.pauhull.paintwars.display;
 
-import de.pauhull.friends.common.party.Party;
-import de.pauhull.friends.spigot.SpigotFriends;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Disguises;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.phase.GamePhase;
 import de.pauhull.paintwars.phase.IngamePhase;
 import de.pauhull.scoreboard.CustomScoreboard;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -49,7 +46,7 @@ public class IngameScoreboard extends CustomScoreboard {
         this.nextScoreID = -1;
         new DisplayScore();
         new DisplayScore("Server:");
-        new DisplayScore(" §d§lCandyCraft§7.§dde");
+        new DisplayScore(" §6§lStyleMC§7.§6de");
 
         super.show();
     }
@@ -110,44 +107,32 @@ public class IngameScoreboard extends CustomScoreboard {
 
     @Override
     public void updateTeam(Player player) {
-        SpigotFriends.getInstance().getPartyManager().getAllParties(parties -> {
-            Bukkit.getScheduler().runTask(PaintWars.getInstance(), () -> {
 
-                Team team = Team.getTeam(player);
-                Team fakeTeam = Disguises.getDisguises().get(player);
+        Team team = Team.getTeam(player);
+        Team fakeTeam = Disguises.getDisguises().get(player);
 
-                if (fakeTeam != null && Team.getTeam(this.player) != team) {
-                    team = fakeTeam;
-                }
+        if (fakeTeam != null && Team.getTeam(this.player) != team) {
+            team = fakeTeam;
+        }
 
-                String name = team != null ? team.name() + player.getName() : ("Z" + player.getName());
-                if (name.length() > 16) {
-                    name = name.substring(0, 16);
-                }
+        String name = team != null ? team.name() + player.getName() : ("Z" + player.getName());
+        if (name.length() > 16) {
+            name = name.substring(0, 16);
+        }
 
-                if (scoreboard.getTeam(name) != null) {
-                    scoreboard.getTeam(name).unregister();
-                }
+        if (scoreboard.getTeam(name) != null) {
+            scoreboard.getTeam(name).unregister();
+        }
 
-                org.bukkit.scoreboard.Team scoreboardTeam = scoreboard.registerNewTeam(name);
+        org.bukkit.scoreboard.Team scoreboardTeam = scoreboard.registerNewTeam(name);
 
-                StringBuilder suffix = new StringBuilder();
-                for (Party party : parties) {
-                    if (party.getMembers().contains(player.getDisplayName()) && party.getMembers().contains(this.player.getDisplayName())) {
-                        suffix.append("§7 [§5Party§7]");
-                    }
-                }
-                scoreboardTeam.setSuffix(suffix.toString());
+        if (team == null) {
+            scoreboardTeam.setPrefix(ChatColor.DARK_GRAY.toString());
+        } else {
+            scoreboardTeam.setPrefix(team.getChatColor().toString());
+        }
 
-                if (team == null) {
-                    scoreboardTeam.setPrefix(ChatColor.DARK_GRAY.toString());
-                } else {
-                    scoreboardTeam.setPrefix(team.getChatColor().toString());
-                }
-
-                scoreboardTeam.addEntry(player.getName());
-            });
-        });
+        scoreboardTeam.addEntry(player.getName());
     }
 
 }

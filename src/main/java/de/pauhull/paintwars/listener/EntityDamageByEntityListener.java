@@ -64,19 +64,6 @@ public class EntityDamageByEntityListener extends ListenerTemplate {
                 event.setDamage(0);
                 return;
             }
-
-            /*
-            ItemStack stack = damager.getItemInHand();
-            if(stack != null && stack.getType() == Material.INK_SACK) {
-                double damage = 6;
-                if(damaged.getInventory().getChestplate() != null && damaged.getInventory().getChestplate().getType() == Material.IRON_CHESTPLATE) {
-                    damage = 4;
-                }
-
-                event.setDamage(damage);
-            }*/
         }
-
     }
-
 }

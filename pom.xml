@@ -14,12 +14,50 @@
             <url>https://repo.morx.me/repository/internal</url>
         </repository>
         <repository>
-            <id>TimoCloud-API</id>
-            <url>https://maven.timo.cloud/repository/TimoCloud-API/</url>
+            <id>mcstats</id>
+            <url>https://maven.mcstats.net/</url>
+        </repository>
+        <repository>
+            <id>cloudnet</id>
+            <url>https://cloudnetservice.eu/repositories/</url>
         </repository>
     </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet-api-bridge</artifactId>
+            <version>2.1.17</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.mcstats2</groupId>
+            <artifactId>MCMoney</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.mcstats2</groupId>
+            <artifactId>MCStatsCORE2</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.tehkode</groupId>
+            <artifactId>PermissionsEx</artifactId>
+            <version>1.23.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.pauhull</groupId>
+            <artifactId>hologram-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>de.pauhull</groupId>
@@ -29,43 +67,10 @@
         </dependency>
 
         <dependency>
-            <groupId>io.sentry</groupId>
-            <artifactId>sentry</artifactId>
-            <version>1.7.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.pauhull</groupId>
-            <artifactId>proxy-communication</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.pauhull</groupId>
-            <artifactId>friends</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>de.pauhull</groupId>
             <artifactId>utils</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>cloud.timo.TimoCloud</groupId>
-            <artifactId>TimoCloud-API</artifactId>
-            <version>5.2.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.darkblade12</groupId>
-            <artifactId>particleeffect</artifactId>
-            <version>1.7.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -81,13 +86,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>de.pauhull</groupId>
-            <artifactId>coinapi</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -100,7 +98,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

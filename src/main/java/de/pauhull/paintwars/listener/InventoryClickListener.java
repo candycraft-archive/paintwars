@@ -19,7 +19,6 @@ public class InventoryClickListener extends ListenerTemplate {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        paintWars.getBuyItemInventory().onInventoryClick(event);
 
         if (paintWars.getSpectators().contains(event.getWhoClicked())) {
             event.setCancelled(true);

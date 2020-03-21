@@ -20,8 +20,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerQuitListener extends ListenerTemplate {
 
-    public static String f = "aki$at.ymla6";
-
     public PlayerQuitListener(PaintWars paintWars) {
         super(paintWars);
     }

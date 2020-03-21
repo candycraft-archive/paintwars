@@ -1,12 +1,13 @@
 package de.pauhull.paintwars.listener;
 
-import de.godtitan.coins.CoinAPI;
 import de.pauhull.paintwars.Messages;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Disguises;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.phase.GamePhase;
 import de.pauhull.paintwars.util.Title;
+import net.mcstats2.mcmoney.manager.MCMoneyManager;
+import net.mcstats2.mcmoney.manager.MCMoneyType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -87,9 +88,9 @@ public class PlayerDeathListener extends ListenerTemplate {
             }
 
             Bukkit.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 wurde von " + prefixColor + killer.getName() + "§7 getötet!");
-            killer.playSound(killer.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+            killer.playSound(killer.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
             Title.sendTitle(killer, "§a✔ §8» §7" + player.getName(), "§a+§75 Coins", 1, 40, 20);
-            CoinAPI.getInstance().addCoins(player.getUniqueId(), 5);
+            MCMoneyManager.getInstance().getProfile(player.getUniqueId()).deposit(MCMoneyType.COINS, 5);
             killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 5));
         } else {
             Bukkit.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 ist §cgestorben§7!");

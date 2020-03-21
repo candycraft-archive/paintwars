@@ -4,7 +4,6 @@ import de.pauhull.paintwars.Messages;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.data.table.StatsTable;
 import de.pauhull.paintwars.game.Team;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -13,8 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -25,9 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class PlayerJoinListener extends ListenerTemplate {
 
-    @Getter
-    private static Map<Player, Long> loggedIn = new HashMap<>();
-
     public PlayerJoinListener(PaintWars paintWars) {
         super(paintWars);
     }
@@ -36,7 +30,6 @@ public class PlayerJoinListener extends ListenerTemplate {
     public void onPlayerJoin(PlayerJoinEvent event) {
 
         Player player = event.getPlayer();
-        loggedIn.put(player, System.currentTimeMillis());
 
         if (!paintWars.getColoredBlocks().containsKey(player.getUniqueId())) {
             paintWars.getColoredBlocks().put(player.getUniqueId(), new AtomicInteger());

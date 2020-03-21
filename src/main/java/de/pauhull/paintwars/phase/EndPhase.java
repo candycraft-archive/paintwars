@@ -1,6 +1,5 @@
 package de.pauhull.paintwars.phase;
 
-import cloud.timo.TimoCloud.api.TimoCloudAPI;
 import de.pauhull.paintwars.PaintWars;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -48,7 +47,7 @@ public class EndPhase extends GamePhase {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.kickPlayer("");
         }
-        TimoCloudAPI.getBukkitAPI().getThisServer().stop();
+        Bukkit.getServer().shutdown();
     }
 
     public void setStartTime(long startTime) {

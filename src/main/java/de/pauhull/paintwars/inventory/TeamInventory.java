@@ -49,7 +49,7 @@ public class TeamInventory implements Listener {
         placeTeam(player, inventory, 14, Team.BLUE);
         placeTeam(player, inventory, 16, Team.YELLOW);
 
-        player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 1, 1);
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
         player.openInventory(inventory);
     }
 
@@ -117,14 +117,14 @@ public class TeamInventory implements Listener {
         Team currentTeam = Team.getTeam(player);
 
         if (team.getMembers().size() >= Team.TEAM_SIZE) {
-            player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
             player.sendMessage(Messages.PREFIX + "Dieses Team ist bereits §cvoll§7!");
             return;
         }
 
         if (currentTeam != null) {
             if (currentTeam == team) {
-                player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
                 player.sendMessage(Messages.PREFIX + "Du bist bereits in Team " + team.getColoredName() + "§7!");
                 return;
             }
@@ -132,7 +132,7 @@ public class TeamInventory implements Listener {
             currentTeam.getMembers().remove(player);
         }
 
-        player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
         player.closeInventory();
         player.sendMessage(Messages.PREFIX + "Du hast das Team " + team.getColoredName() + "§7 ausgewählt!");
         team.getMembers().add(player);

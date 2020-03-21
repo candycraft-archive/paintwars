@@ -56,7 +56,7 @@ public class PlayerInteractListener extends ListenerTemplate {
                 player.sendMessage(Messages.PREFIX + "Du hast das Jump and Run §cverlassen§7.");
                 paintWars.getItemManager().giveLobbyItems(player);
                 paintWars.getLocationManager().teleport(player, "Lobby");
-                player.playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
                 PlayerMoveListener.getInstance().getJumpAndRunCheckpoints().remove(player);
                 PlayerMoveListener.getInstance().getJumpAndRunFinished().remove(player);
             } else if (stack.equals(ItemManager.BACK) && PlayerMoveListener.getInstance().getJumpAndRunCheckpoints().containsKey(player)) {
@@ -66,7 +66,7 @@ public class PlayerInteractListener extends ListenerTemplate {
                 } else {
                     paintWars.getLocationManager().teleport(player, "cp" + checkpointId);
                 }
-                player.playSound(player.getLocation(), Sound.BAT_DEATH, 1, 1);
+                player.playSound(player.getLocation(), Sound.ENTITY_BAT_DEATH, 1, 1);
                 player.getInventory().setItem(4, ItemManager.WAIT);
                 Bukkit.getScheduler().scheduleSyncDelayedTask(paintWars, () -> {
                     if (player.getInventory().getItem(4) != null && player.getInventory().getItem(4).equals(ItemManager.WAIT)) {

@@ -1,14 +1,12 @@
 package de.pauhull.paintwars.display;
 
-import cloud.timo.TimoCloud.api.TimoCloudAPI;
-import de.pauhull.friends.common.party.Party;
-import de.pauhull.friends.spigot.SpigotFriends;
-import de.pauhull.paintwars.PaintWars;
+import de.dytanic.cloudnet.bridge.CloudServer;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.scoreboard.CustomScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import ru.tehkode.permissions.PermissionGroup;
 
 
 /**
@@ -28,10 +26,10 @@ public class LobbyScoreboard extends CustomScoreboard {
 
     @Override
     public void show() {
-        new DisplayScore(" §d§lCandyCraft§7.§dde");
+        new DisplayScore(" §6§lStyleMC§7.§6de");
         new DisplayScore("§fServer:");
         new DisplayScore();
-        new DisplayScore(" §c" + TimoCloudAPI.getBukkitAPI().getThisServer().getMap());
+        new DisplayScore(" §c" + CloudServer.getInstance().getMotd());
         new DisplayScore("§fMap:");
         new DisplayScore();
         this.team = new DisplayScore(" §7Lädt...");
@@ -64,39 +62,41 @@ public class LobbyScoreboard extends CustomScoreboard {
 
     @Override
     public void updateTeam(Player player) {
-        SpigotFriends.getInstance().getPartyManager().getAllParties(parties -> {
-            Bukkit.getScheduler().runTask(PaintWars.getInstance(), () -> {
 
-                Team team = Team.getTeam(player);
+        String prefix;
+        String rank;
+        if (player.getDisplayName().equals(player.getName())) {
+            PermissionGroup group = this.getHighestPermissionGroup(player);
+            rank = group.getRank() + "";
+            prefix = ChatColor.translateAlternateColorCodes('&', group.getPrefix());
+        } else {
+            rank = "65";
+            prefix = "§a";
+        }
 
-                String name = team != null ? team.name() + player.getName() : "Z" + player.getName();
-                if (name.length() > 16) {
-                    name = name.substring(0, 16);
-                }
+        Team team = Team.getTeam(player);
 
-                if (scoreboard.getTeam(name) != null) {
-                    scoreboard.getTeam(name).unregister();
-                }
+        String name = team != null ? team.name() + rank + player.getName() : "Z" + rank + player.getName();
+        if (name.length() > 16) {
+            name = name.substring(0, 16);
+        }
 
-                org.bukkit.scoreboard.Team scoreboardTeam = scoreboard.registerNewTeam(name);
+        if (scoreboard.getTeam(name) != null) {
+            scoreboard.getTeam(name).unregister();
+        }
 
-                StringBuilder suffix = new StringBuilder();
-                for (Party party : parties) {
-                    if (party.getMembers().contains(player.getDisplayName()) && party.getMembers().contains(this.player.getDisplayName())) {
-                        suffix.append("§7 [§5Party§7]");
-                    }
-                }
-                scoreboardTeam.setSuffix(suffix.toString());
+        org.bukkit.scoreboard.Team scoreboardTeam = scoreboard.registerNewTeam(name);
 
-                if (team == null) {
-                    scoreboardTeam.setPrefix(ChatColor.GRAY.toString());
-                } else {
-                    scoreboardTeam.setPrefix(team.getChatColor().toString());
-                }
+        String suffix = "";
+        String suffixColor = "";
+        if (team != null) {
+            suffix = " [" + team.getName() + "]";
+            suffixColor = team.getChatColor().toString();
+        }
 
-                scoreboardTeam.addEntry(player.getName());
-            });
-        });
+        scoreboardTeam.setSuffix(suffixColor + suffix);
+        scoreboardTeam.setPrefix(prefix);
+        scoreboardTeam.addEntry(player.getName());
     }
 
 }

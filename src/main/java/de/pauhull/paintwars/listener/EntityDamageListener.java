@@ -12,8 +12,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
  */
 public class EntityDamageListener extends ListenerTemplate {
 
-    public static char c = 'a';
-
     public EntityDamageListener(PaintWars paintWars) {
         super(paintWars);
     }

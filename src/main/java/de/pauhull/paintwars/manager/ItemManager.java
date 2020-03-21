@@ -4,7 +4,6 @@ import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Powerup;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.util.ItemBuilder;
-import io.sentry.Sentry;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -45,7 +44,7 @@ public class ItemManager {
 
         book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setAuthor("§d§lCandyCraft§8.§dde§7-Team");
+        meta.setAuthor("§6§lStyleMC§7.§6de§7-Team");
         meta.setDisplayName("§6Tutorial §7§o<Rechtsklick>");
         for (int i = 0; i < 4; i++) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(paintWars.getResource("book/page" + i + ".txt")))) {
@@ -56,7 +55,6 @@ public class ItemManager {
                 }
                 meta.addPage(pageBuilder.toString());
             } catch (IOException e) {
-                Sentry.capture(e);
                 e.printStackTrace();
             }
         }

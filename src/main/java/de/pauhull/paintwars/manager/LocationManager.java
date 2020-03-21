@@ -1,14 +1,16 @@
 package de.pauhull.paintwars.manager;
 
+import de.dytanic.cloudnet.bridge.CloudServer;
 import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.util.TimedHashMap;
-import io.sentry.Sentry;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,14 +22,30 @@ import java.util.concurrent.TimeUnit;
 public class LocationManager {
 
     private TimedHashMap<String, Location> cache = new TimedHashMap<>(TimeUnit.MINUTES, 5);
-    private PaintWars paintWars;
     private YamlConfiguration config;
     private File file;
 
     public LocationManager(PaintWars paintWars) {
-        this.paintWars = paintWars;
-        this.file = new File(paintWars.getDataFolder(), "locations.yml");
-        this.config = YamlConfiguration.loadConfiguration(file);
+
+        File locationsFolder = new File(paintWars.getDataFolder().getAbsolutePath() + "/locations/");
+
+        if (!locationsFolder.exists()) {
+            locationsFolder.mkdirs();
+        }
+
+        File[] worlds = locationsFolder.listFiles((file) -> file.getName().endsWith(".yml"));
+
+        if (worlds == null) {
+            Bukkit.shutdown();
+            return;
+        }
+
+        Random random = new Random();
+        File worldFile = worlds[random.nextInt(worlds.length)];
+        this.file = worldFile;
+
+        CloudServer.getInstance().setMotdAndUpdate(worldFile.getName().split(".")[0]);
+        config = YamlConfiguration.loadConfiguration(file);
     }
 
     public void saveLocation(Location location, String name) {
@@ -37,7 +55,6 @@ public class LocationManager {
         try {
             config.save(file);
         } catch (IOException e) {
-            Sentry.capture(e);
             e.printStackTrace();
         }
     }

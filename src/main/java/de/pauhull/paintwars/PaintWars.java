@@ -1,6 +1,5 @@
 package de.pauhull.paintwars;
 
-import de.pauhull.coins.spigot.inventory.BuyItemInventory;
 import de.pauhull.paintwars.command.SetLocationCommand;
 import de.pauhull.paintwars.command.StartCommand;
 import de.pauhull.paintwars.command.StatsCommand;
@@ -18,19 +17,18 @@ import de.pauhull.paintwars.phase.GamePhaseHandler;
 import de.pauhull.paintwars.util.HeadCache;
 import de.pauhull.paintwars.util.Selection;
 import de.pauhull.paintwars.util.TeleportFix;
+import de.pauhull.paintwars.util.UUIDFetcher;
 import de.pauhull.scoreboard.ScoreboardManager;
-import de.pauhull.uuidfetcher.spigot.SpigotUUIDFetcher;
-import io.sentry.Sentry;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.v1_8_R3.DedicatedPlayerList;
+import net.minecraft.server.v1_12_R1.DedicatedPlayerList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -80,9 +78,6 @@ public class PaintWars extends JavaPlugin {
     private SpectatorInventory spectatorInventory;
 
     @Getter
-    private BuyItemInventory buyItemInventory;
-
-    @Getter
     @Setter
     private Team winningTeam = null;
 
@@ -111,7 +106,7 @@ public class PaintWars extends JavaPlugin {
     private List<UUID> winningPlayers = new ArrayList<>();
 
     @Getter
-    private SpigotUUIDFetcher uuidFetcher;
+    private UUIDFetcher uuidFetcher;
 
     @Getter
     private TopPlayerManager topPlayerManager;
@@ -134,7 +129,6 @@ public class PaintWars extends JavaPlugin {
             maxPlayers.setAccessible(true);
             maxPlayers.set(server, Team.MAX_PLAYERS);
         } catch (ReflectiveOperationException e) {
-            Sentry.capture(e);
             e.printStackTrace();
         }
 
@@ -142,11 +136,10 @@ public class PaintWars extends JavaPlugin {
         this.locationManager = new LocationManager(this);
         this.scoreboardManager = new ScoreboardManager(this, LobbyScoreboard.class);
         this.phaseHandler = new GamePhaseHandler();
-        this.uuidFetcher = SpigotUUIDFetcher.getInstance();
+        this.uuidFetcher = new UUIDFetcher(this);
         this.itemManager = new ItemManager(this);
         this.teamInventory = new TeamInventory(this);
         this.spectatorInventory = new SpectatorInventory(this);
-        this.buyItemInventory = new BuyItemInventory();
         this.headCache = new HeadCache();
         this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         this.executorService = Executors.newSingleThreadExecutor();
@@ -199,9 +192,6 @@ public class PaintWars extends JavaPlugin {
         new ServerListPingListener(this);
         new WeatherChangeListener(this);
         new FoodLevelChangeListener(this);
-        new PlayerPartyListener(this);
-
-        Sentry.init("https://d1e600da59bd4e90a9303a41bf5b3b83@bugs.morx.me/4");
     }
 
     @Override
@@ -221,7 +211,6 @@ public class PaintWars extends JavaPlugin {
             try {
                 Files.copy(getResource(resource), file.toPath());
             } catch (IOException e) {
-                Sentry.capture(e);
                 e.printStackTrace();
             }
         }

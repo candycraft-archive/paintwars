@@ -1,7 +1,7 @@
 package de.pauhull.paintwars.util;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class HeadCache {
 
-    private TimedHashMap<String, net.minecraft.server.v1_8_R3.ItemStack> heads;
+    private TimedHashMap<String, net.minecraft.server.v1_12_R1.ItemStack> heads;
 
     public HeadCache() {
         this(TimeUnit.MINUTES, 30);
@@ -33,7 +33,7 @@ public class HeadCache {
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
         meta.setOwner(owner);
         stack.setItemMeta(meta);
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
+        net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
         heads.put(owner, nmsStack);
     }
 

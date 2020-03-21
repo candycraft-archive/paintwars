@@ -38,13 +38,13 @@ public enum Powerup {
     /*⬛«*/
 
     SPEED(Material.RABBIT_FOOT, 1, 0, "§bGeschwindigkeits-Powerup", player -> {
-        player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
         player.sendMessage(Messages.PREFIX + "Du hast einen Geschwindigkeits-Boost erhalten!");
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 400, 1));
     }),
 
     HEALTH(Material.INK_SACK, 1, 1, "§cSofortheilungs-Powerup", player -> {
-        player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
         player.sendMessage(Messages.PREFIX + "Du bist nun unsichtbar!");
         ItemStack potionStack = new ItemBuilder(Material.POTION)
                 .setPotion(PotionType.INSTANT_HEAL, false, 1, true).setDisplayName("§8⬛ §cSofortheilung §8«").build();
@@ -52,14 +52,14 @@ public enum Powerup {
     }),
 
     INVISIBILITY(Material.QUARTZ, 1, 0, "§fUnsichtbarkeits-Powerup", player -> {
-        player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
         player.sendMessage(Messages.PREFIX + "Du bist nun unsichtbar!");
         player.getInventory().setArmorContents(new ItemStack[4]);
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0));
     }),
 
     BOMBS(Material.SNOW_BALL, 1, 0, "§9Farbbombem-Powerup", player -> {
-        player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
         ItemStack bombs = ItemManager.BOMBS.clone();
         player.sendMessage(Messages.PREFIX + "Du hast 5 Extra-Bomben erhalten!");
         bombs.setAmount(5);
@@ -67,7 +67,7 @@ public enum Powerup {
     }),
 
     TANK(Material.IRON_CHESTPLATE, 1, 0, "§3Rüstungs-Powerup", player -> {
-        player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
         player.sendMessage(Messages.PREFIX + "Du hast eine Eisenrüstung erhalten!");
         player.getInventory().setArmorContents(new ItemStack[]{
                 new ItemBuilder(Material.IRON_BOOTS).setDisplayName("§8⬛ §cEisenschuhe §8«").setUnbreakable(true).build(),
@@ -78,7 +78,7 @@ public enum Powerup {
     }),
 
     DISGUISE(Material.NAME_TAG, 1, 0, "§dTarnungs-Powerup", player -> {
-        player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1, 1);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
         Team team = Disguises.disguise(player);
         if (team == null) {
             player.sendMessage(Messages.PREFIX + "Es wurde §ckein §7Team gefunden, als das du dich tarnen kannst.");
@@ -142,7 +142,7 @@ public enum Powerup {
             particles.put(item, effect);
             Bukkit.broadcastMessage(Messages.PREFIX + "Ein §d§lPowerup §7wurde bei §e" + location.getBlockX() + "/" + location.getBlockY() + "/" + location.getBlockZ() + "§7 gespawnt!");
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
                 Title.sendTitle(player, "§7Ein §d§lPowerup", "§7wurde gespawnt!", 0, 40, 20);
             }
             updateCompass();

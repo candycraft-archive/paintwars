@@ -3,7 +3,6 @@ package de.pauhull.paintwars.manager;
 import de.pauhull.npcapi.npc.Npc;
 import de.pauhull.npcapi.npc.SkinData;
 import de.pauhull.paintwars.PaintWars;
-import io.sentry.Sentry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -36,7 +35,6 @@ public class TopPlayerManager {
             try {
                 skinCacheFile.createNewFile();
             } catch (IOException e) {
-                Sentry.capture(e);
                 e.printStackTrace();
             }
         }
@@ -60,16 +58,17 @@ public class TopPlayerManager {
                 final Location location = paintWars.getLocationManager().getLocation("top" + (i + 1));
                 final Location signLocation = paintWars.getLocationManager().getLocation("sign" + (i + 1));
                 final int index = i;
-                paintWars.getUuidFetcher().fetchProfileAsync(topPlayers.get(i), profile -> {
-                    Npc npc = new Npc(location, UUID.randomUUID(), "§e" + profile.getPlayerName(), getSkinData(profile.getUuid()), false);
+
+                paintWars.getUuidFetcher().fetchProfile(topPlayers.get(i).toString(), (uuid, name) -> {
+                    Npc npc = new Npc(location, UUID.randomUUID(), null, getSkinData(uuid), false);
                     npc.spawn();
 
                     final DecimalFormat format = new DecimalFormat("#.##");
-                    paintWars.getStatsTable().getStats(profile.getUuid(), stats -> Bukkit.getScheduler().runTask(paintWars, () -> {
+                    paintWars.getStatsTable().getStats(uuid, stats -> Bukkit.getScheduler().runTask(paintWars, () -> {
                         Block block = signLocation.getBlock();
                         Sign sign = (Sign) block.getState();
                         sign.setLine(0, "§2" + (index + 1) + ".");
-                        sign.setLine(1, "§1" + profile.getPlayerName());
+                        sign.setLine(1, "§1" + name);
                         sign.setLine(2, "§4" + stats.getWins() + " Wins");
                         sign.setLine(3, "§5K/D: " + format.format(stats.getKD()));
                         sign.update();
@@ -86,7 +85,6 @@ public class TopPlayerManager {
                 try {
                     skinCache.save(skinCacheFile);
                 } catch (IOException e) {
-                    Sentry.capture(e);
                     e.printStackTrace();
                 }
                 return getSkinData(uuid);
@@ -106,7 +104,6 @@ public class TopPlayerManager {
         try {
             skinCache.save(skinCacheFile);
         } catch (IOException e) {
-            Sentry.capture(e);
             e.printStackTrace();
         }
         return data;

@@ -114,8 +114,8 @@ public class ProjectileHitListener extends ListenerTemplate {
                     }
                 }
 
-                snowball.getWorld().playEffect(snowball.getLocation(), Effect.EXPLOSION_HUGE, 0);
-                snowball.getWorld().playSound(snowball.getLocation(), Sound.EXPLODE, 1, 1);
+                snowball.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, snowball.getLocation(), 0);
+                snowball.getWorld().playSound(snowball.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
             }
         }
     }
