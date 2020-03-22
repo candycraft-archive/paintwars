@@ -10,10 +10,6 @@
 
     <repositories>
         <repository>
-            <id>candycraft-repo</id>
-            <url>https://repo.morx.me/repository/internal</url>
-        </repository>
-        <repository>
             <id>mcstats</id>
             <url>https://maven.mcstats.net/</url>
         </repository>
@@ -43,13 +39,6 @@
             <groupId>net.mcstats2</groupId>
             <artifactId>MCStatsCORE2</artifactId>
             <version>1.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.tehkode</groupId>
-            <artifactId>PermissionsEx</artifactId>
-            <version>1.23.4</version>
             <scope>provided</scope>
         </dependency>
 
