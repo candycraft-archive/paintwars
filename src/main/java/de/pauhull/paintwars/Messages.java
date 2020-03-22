@@ -8,7 +8,7 @@ package de.pauhull.paintwars;
  */
 public class Messages {
 
-    public static String PREFIX = "§f[§6PaintWars§f] §7";
+    public static String PREFIX = "§6§lPaintWars§r §8§l»§r §7";
     public static String NO_PERMISSIONS = "Dafür hast du §ckeine §7Rechte!";
     public static String ONLY_PLAYERS = "Nur §cSpieler §7können diesen Befehl benutzen!";
 
