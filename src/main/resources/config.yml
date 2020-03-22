@@ -7,3 +7,8 @@ MySQL:
   Password: ""
 
 TeamSize: 4
+CoinsAfterWin: 25
+CreditsAfterWin: 0.5
+CoinsAfterKill: 5
+CreditsAfterKill: 0.15
+CoinsFairPlay: 15

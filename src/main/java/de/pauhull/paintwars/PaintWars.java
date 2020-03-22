@@ -14,10 +14,7 @@ import de.pauhull.paintwars.manager.ItemManager;
 import de.pauhull.paintwars.manager.LocationManager;
 import de.pauhull.paintwars.manager.TopPlayerManager;
 import de.pauhull.paintwars.phase.GamePhaseHandler;
-import de.pauhull.paintwars.util.HeadCache;
-import de.pauhull.paintwars.util.Selection;
-import de.pauhull.paintwars.util.TeleportFix;
-import de.pauhull.paintwars.util.UUIDFetcher;
+import de.pauhull.paintwars.util.*;
 import de.pauhull.scoreboard.ScoreboardManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -122,6 +119,11 @@ public class PaintWars extends JavaPlugin {
         Team.TEAM_SIZE = config.getInt("TeamSize");
         Team.MAX_PLAYERS = Team.TEAM_SIZE * Team.TEAM_AMOUNT;
         Team.MIN_PLAYERS = Team.TEAM_SIZE + 1;
+        CoinUtil.COINS_AFTER_WIN = config.getDouble("CoinsAfterWin");
+        CoinUtil.CREDITS_AFTER_WIN = config.getDouble("CreditsAfterWin");
+        CoinUtil.COINS_AFTER_KILL = config.getDouble("CoinsAfterKill");
+        CoinUtil.CREDITS_AFTER_KILL = config.getDouble("CreditsAfterKill");
+        CoinUtil.COINS_FAIR_PLAY = config.getDouble("CoinsFairPlay");
 
         try {
             DedicatedPlayerList server = ((CraftServer) Bukkit.getServer()).getHandle();

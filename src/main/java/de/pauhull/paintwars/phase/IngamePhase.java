@@ -8,11 +8,10 @@ import de.pauhull.paintwars.display.IngameScoreboard;
 import de.pauhull.paintwars.game.Powerup;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.util.ActionBar;
+import de.pauhull.paintwars.util.CoinUtil;
 import de.pauhull.paintwars.util.Title;
 import de.pauhull.utils.misc.RandomFireworkGenerator;
 import lombok.Getter;
-import net.mcstats2.mcmoney.manager.MCMoneyManager;
-import net.mcstats2.mcmoney.manager.MCMoneyType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -156,13 +155,22 @@ public class IngamePhase extends GamePhase {
             RandomFireworkGenerator.shootRandomFirework(player.getLocation(), 10);
         }
 
+        String title = "§7Team " + team.getColoredName() + " §7hat das Spiel §agewonnen§7!";
+        String subTitle;
+
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Title.sendTitle(player, "§7Team " + team.getColoredName() + " §7hat das Spiel §agewonnen§7!",
-                    team.getMembers().contains(player) ? "§a+§775 Coins" : "", 0, 40, 20);
+
             if (team.getMembers().contains(player)) {
-                MCMoneyManager.getInstance().getProfile(player.getUniqueId()).deposit(MCMoneyType.COINS, 75);
+                double coins = CoinUtil.COINS_AFTER_WIN;
+                double credits = CoinUtil.CREDITS_AFTER_WIN;
                 PaintWars.getInstance().getWinningPlayers().add(player.getUniqueId());
+                CoinUtil.addBalance(player.getUniqueId(), coins, credits);
+                subTitle = CoinUtil.buildSubTitle(coins, credits);
+            } else {
+                subTitle = "";
             }
+
+            player.sendTitle(title, subTitle, 0, 40, 20);
 
             if (PaintWars.getInstance().getColoredBlocks().containsKey(player.getUniqueId())) {
                 PaintWars.getInstance().getStatsTable().getStats(player.getUniqueId(), stats -> {

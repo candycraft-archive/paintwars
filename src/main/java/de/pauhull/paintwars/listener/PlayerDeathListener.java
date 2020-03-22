@@ -5,9 +5,7 @@ import de.pauhull.paintwars.PaintWars;
 import de.pauhull.paintwars.game.Disguises;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.paintwars.phase.GamePhase;
-import de.pauhull.paintwars.util.Title;
-import net.mcstats2.mcmoney.manager.MCMoneyManager;
-import net.mcstats2.mcmoney.manager.MCMoneyType;
+import de.pauhull.paintwars.util.CoinUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -89,12 +87,19 @@ public class PlayerDeathListener extends ListenerTemplate {
 
             Bukkit.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 wurde von " + prefixColor + killer.getName() + "§7 getötet!");
             killer.playSound(killer.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
-            Title.sendTitle(killer, "§a✔ §8» §7" + player.getName(), "§a+§75 Coins", 1, 40, 20);
-            MCMoneyManager.getInstance().getProfile(player.getUniqueId()).deposit(MCMoneyType.COINS, 5);
+
+            double coins = CoinUtil.COINS_AFTER_KILL;
+            double credits = CoinUtil.CREDITS_AFTER_KILL;
+            String title = "§a✔ §8» §7" + player.getName();
+            String subTitle = CoinUtil.buildSubTitle(coins, credits);
+
+            player.sendTitle(title, subTitle, 1, 40, 20);
+            CoinUtil.addBalance(player.getUniqueId(), coins, credits);
+
             killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 5));
         } else {
             Bukkit.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 ist §cgestorben§7!");
-            Title.sendTitle(player, "§4✖", "§7Du bist §cgestorben", 1, 40, 20);
+            player.sendTitle("§4✖", "§7Du bist §cgestorben", 1, 40, 20);
         }
 
         respawn(player);
