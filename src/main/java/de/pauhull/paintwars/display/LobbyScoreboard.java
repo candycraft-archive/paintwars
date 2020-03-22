@@ -3,11 +3,10 @@ package de.pauhull.paintwars.display;
 import de.dytanic.cloudnet.bridge.CloudServer;
 import de.pauhull.paintwars.game.Team;
 import de.pauhull.scoreboard.CustomScoreboard;
+import net.mcstats2.bridge.server.bukkit.MCPerms;
+import net.mcstats2.permissions.manager.data.MCSGroupData;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import ru.tehkode.permissions.PermissionGroup;
-
 
 /**
  * Created by Paul
@@ -66,9 +65,9 @@ public class LobbyScoreboard extends CustomScoreboard {
         String prefix;
         String rank;
         if (player.getDisplayName().equals(player.getName())) {
-            PermissionGroup group = this.getHighestPermissionGroup(player);
-            rank = group.getRank() + "";
-            prefix = ChatColor.translateAlternateColorCodes('&', group.getPrefix());
+            MCSGroupData group = MCPerms.getInstance().getManager().getHighestGroup(player.getUniqueId());
+            rank = group.tagID + "";
+            prefix = group.prefix;
         } else {
             rank = "65";
             prefix = "§a";

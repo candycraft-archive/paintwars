@@ -182,7 +182,6 @@ public class PaintWars extends JavaPlugin {
         new PlayerDropItemListener(this);
         new PlayerInteractListener(this);
         new PlayerJoinListener(this);
-        new PlayerNickListener(this);
         new PlayerLoginListener(this);
         new PlayerMoveListener(this);
         new PlayerPickupItemListener(this);
