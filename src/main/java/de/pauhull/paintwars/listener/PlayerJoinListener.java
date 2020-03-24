@@ -7,6 +7,7 @@ import de.pauhull.paintwars.game.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,6 +31,7 @@ public class PlayerJoinListener extends ListenerTemplate {
     public void onPlayerJoin(PlayerJoinEvent event) {
 
         Player player = event.getPlayer();
+        player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(100);
 
         if (!paintWars.getColoredBlocks().containsKey(player.getUniqueId())) {
             paintWars.getColoredBlocks().put(player.getUniqueId(), new AtomicInteger());
