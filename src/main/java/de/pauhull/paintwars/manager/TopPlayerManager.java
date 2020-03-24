@@ -1,7 +1,5 @@
 package de.pauhull.paintwars.manager;
 
-import de.pauhull.npcapi.npc.Npc;
-import de.pauhull.npcapi.npc.SkinData;
 import de.pauhull.paintwars.PaintWars;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,8 +11,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Paul
@@ -60,8 +56,8 @@ public class TopPlayerManager {
                 final int index = i;
 
                 paintWars.getUuidFetcher().fetchProfile(topPlayers.get(i).toString(), (uuid, name) -> {
-                    Npc npc = new Npc(location, UUID.randomUUID(), null, getSkinData(uuid), false);
-                    npc.spawn();
+                    //Npc npc = new Npc(location, UUID.randomUUID(), null, getSkinData(uuid), false);
+                    //npc.spawn();
 
                     final DecimalFormat format = new DecimalFormat("#.##");
                     paintWars.getStatsTable().getStats(uuid, stats -> Bukkit.getScheduler().runTask(paintWars, () -> {
@@ -78,6 +74,7 @@ public class TopPlayerManager {
         });
     }
 
+    /*
     public SkinData getSkinData(UUID uuid) { // Cache skin for a hour
         if (skinCache.isSet(uuid.toString())) {
             if (System.currentTimeMillis() - skinCache.getLong(uuid + ".Timestamp") > TimeUnit.HOURS.toMillis(1)) {
@@ -108,5 +105,6 @@ public class TopPlayerManager {
         }
         return data;
     }
+     */
 
 }
