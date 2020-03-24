@@ -2,7 +2,8 @@ author: pauhull
 name: PaintWars
 version: 1.0
 main: de.pauhull.paintwars.PaintWars
-softdepend: [CloudNetAPI, NpcApi]
+depend: [CloudNetAPI]
+softdepend: [NpcApi]
 
 commands:
   setlocation:
