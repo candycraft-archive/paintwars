@@ -27,25 +27,17 @@ public class LocationManager {
 
     public LocationManager(PaintWars paintWars) {
 
-        File locationsFolder = new File("plugins/PaintWars/locations");
+        File locationsFolder = new File(paintWars.getDataFolder(), "locations/");
 
         if (!locationsFolder.exists()) {
             locationsFolder.mkdirs();
         }
 
-        File[] worlds = locationsFolder.listFiles();
+        File[] worlds = locationsFolder.listFiles(file -> file.getName().endsWith(".yml"));
 
         if (worlds == null || worlds.length == 0) {
             Bukkit.shutdown();
             return;
-        }
-
-        for (File world : worlds) {
-            if (world == null) {
-                System.out.println("NULL");
-            } else {
-                System.out.println(world.getName());
-            }
         }
 
         this.file = worlds[new Random().nextInt(worlds.length)];
