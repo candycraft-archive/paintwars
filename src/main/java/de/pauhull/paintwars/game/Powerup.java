@@ -140,7 +140,7 @@ public enum Powerup {
             ParticleEffect effect = new SpiralEffect(PaintWars.getInstance().getScheduledExecutorService(), item.getLocation().subtract(0.5, 0, 0.5),
                     new ParticlePlayer(Particles.FLAME), 50, 1.5, 3, 10, 1.75, true, 1).play();
             particles.put(item, effect);
-            Bukkit.broadcastMessage(Messages.PREFIX + "Ein §d§lPowerup §7wurde bei §e" + location.getBlockX() + "/" + location.getBlockY() + "/" + location.getBlockZ() + "§7 gespawnt!");
+            PaintWars.broadcastMessage(Messages.PREFIX + "Ein §d§lPowerup §7wurde bei §e" + location.getBlockX() + "/" + location.getBlockY() + "/" + location.getBlockZ() + "§7 gespawnt!");
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
                 Title.sendTitle(player, "§7Ein §d§lPowerup", "§7wurde gespawnt!", 0, 40, 20);
@@ -153,7 +153,7 @@ public enum Powerup {
         powerups.remove(item);
         particles.get(item).stop();
         particles.remove(item);
-        Bukkit.broadcastMessage(Messages.PREFIX + "§e" + player.getName() + "§7 hat ein §d§lPowerup §7aufgesammelt!");
+        PaintWars.broadcastMessage(Messages.PREFIX + "§e" + player.getName() + "§7 hat ein §d§lPowerup §7aufgesammelt!");
         onPickup.accept(player);
         updateCompass();
 

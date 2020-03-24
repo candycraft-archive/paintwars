@@ -46,13 +46,13 @@ public class LobbyPhase extends GamePhase implements Runnable {
         int onlineCount = Bukkit.getOnlinePlayers().size();
 
         if (onlineCount >= Team.MIN_PLAYERS && countdown == -1) {
-            Bukkit.broadcastMessage(Messages.PREFIX + "§7Der Countdown wurde §agestartet!");
+            PaintWars.broadcastMessage(Messages.PREFIX + "§7Der Countdown wurde §agestartet!");
             countdown = 60;
             return;
         }
 
         if (onlineCount < Team.MIN_PLAYERS && countdown != -1) {
-            Bukkit.broadcastMessage(Messages.PREFIX + "Der Countdown wurde §cabgebrochen§7, da nicht genügend Spieler online sind.");
+            PaintWars.broadcastMessage(Messages.PREFIX + "Der Countdown wurde §cabgebrochen§7, da nicht genügend Spieler online sind.");
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.setExp(0);
                 player.setLevel(0);
@@ -107,7 +107,7 @@ public class LobbyPhase extends GamePhase implements Runnable {
     @Override
     public void end() {
         super.end();
-        Bukkit.broadcastMessage(Messages.PREFIX + "Das Spiel §astartet§7!");
+        PaintWars.broadcastMessage(Messages.PREFIX + "Das Spiel §astartet§7!");
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (Team.getTeam(player) == null) {
                 Team team = Team.findFreeTeam();

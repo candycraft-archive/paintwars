@@ -85,7 +85,7 @@ public class PlayerDeathListener extends ListenerTemplate {
                 prefixColor = killerTeam.getChatColor();
             }
 
-            Bukkit.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 wurde von " + prefixColor + killer.getName() + "§7 getötet!");
+            PaintWars.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 wurde von " + prefixColor + killer.getName() + "§7 getötet!");
             killer.playSound(killer.getLocation(), Sound.BLOCK_NOTE_PLING, 1, 1);
 
             double coins = CoinUtil.COINS_AFTER_KILL;
@@ -93,12 +93,12 @@ public class PlayerDeathListener extends ListenerTemplate {
             String title = "§a✔ §8» §7" + player.getName();
             String subTitle = CoinUtil.buildSubTitle(coins, credits);
 
-            player.sendTitle(title, subTitle, 1, 40, 20);
-            CoinUtil.addBalance(player.getUniqueId(), coins, credits);
+            killer.sendTitle(title, subTitle, 1, 40, 20);
+            CoinUtil.addBalance(killer.getUniqueId(), coins, credits);
 
             killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 5));
         } else {
-            Bukkit.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 ist §cgestorben§7!");
+            PaintWars.broadcastMessage(Messages.PREFIX + "Der Spieler " + prefix + player.getName() + "§7 ist §cgestorben§7!");
             player.sendTitle("§4✖", "§7Du bist §cgestorben", 1, 40, 20);
         }
 

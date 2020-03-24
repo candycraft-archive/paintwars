@@ -70,9 +70,9 @@ public class IngamePhase extends GamePhase {
         if (time % 60 == 0) {
             int minutes = 5 - time / 60;
             if (minutes == 1) {
-                Bukkit.broadcastMessage(Messages.PREFIX + "Noch §eeine §7Minute!");
+                PaintWars.broadcastMessage(Messages.PREFIX + "Noch §eeine §7Minute!");
             } else if (minutes > 1) {
-                Bukkit.broadcastMessage(Messages.PREFIX + "Noch §e" + minutes + "§7 Minuten!");
+                PaintWars.broadcastMessage(Messages.PREFIX + "Noch §e" + minutes + "§7 Minuten!");
             } else {
                 break timeCheck;
             }
@@ -182,9 +182,9 @@ public class IngamePhase extends GamePhase {
             }
         }
 
-        Bukkit.broadcastMessage("§8§m                                 ");
-        Bukkit.broadcastMessage("§7Team " + team.getColoredName() + "§7 hat das Spiel §agewonnen§7!");
-        Bukkit.broadcastMessage(" ");
+        PaintWars.broadcastMessage("§8§m                                 ");
+        PaintWars.broadcastMessage("§7Team " + team.getColoredName() + "§7 hat das Spiel §agewonnen§7!");
+        PaintWars.broadcastMessage(" ");
 
         // sort map
         Comparator<Map.Entry<String, Double>> comparator = (e1, e2) -> {
@@ -198,14 +198,14 @@ public class IngamePhase extends GamePhase {
         for (String teamName : sortedMap.keySet()) {
             String amount = (int) ((sortedMap.get(teamName) * 10000.0) / 100.0) + "%";
             if (teamName.equals("UNCOLORED")) {
-                Bukkit.broadcastMessage("§8× §7Ungefärbt: §b" + amount);
+                PaintWars.broadcastMessage("§8× §7Ungefärbt: §b" + amount);
                 continue;
             }
 
             Team checkTeam = Team.valueOf(teamName);
-            Bukkit.broadcastMessage("§8× " + checkTeam.getColoredName() + "§7: §b" + amount);
+            PaintWars.broadcastMessage("§8× " + checkTeam.getColoredName() + "§7: §b" + amount);
         }
-        Bukkit.broadcastMessage("§8§m                                 ");
+        PaintWars.broadcastMessage("§8§m                                 ");
 
         PaintWars.getInstance().getScoreboardManager().updateTitle("§e§lPaint§6§lWars §8| §7Ende");
 

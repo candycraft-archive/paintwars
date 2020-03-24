@@ -22,6 +22,7 @@ import de.pauhull.paintwars.util.UUIDFetcher;
 import de.pauhull.scoreboard.ScoreboardManager;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -248,6 +249,11 @@ public class PaintWars extends JavaPlugin {
         }
 
         return blocks;
+    }
+
+    public static void broadcastMessage(final String message) {
+
+        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(message));
     }
 
 }
