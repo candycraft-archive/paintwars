@@ -2,16 +2,17 @@ package de.pauhull.paintwars.manager;
 
 import de.dytanic.cloudnet.bridge.CloudServer;
 import de.pauhull.paintwars.PaintWars;
-import de.pauhull.paintwars.util.TimedHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Paul
@@ -21,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class LocationManager {
 
-    private TimedHashMap<String, Location> cache = new TimedHashMap<>(TimeUnit.MINUTES, 5);
     private YamlConfiguration config;
     private File file;
 
@@ -41,14 +41,13 @@ public class LocationManager {
         }
 
         this.file = worlds[new Random().nextInt(worlds.length)];
-        String motd = file.getName().split("\\.")[0];
-        CloudServer.getInstance().setMotdAndUpdate(motd);
+        CloudServer.getInstance().setMotdAndUpdate(file.getName().split("\\.")[0]);
         config = YamlConfiguration.loadConfiguration(file);
     }
 
     public void saveLocation(Location location, String name) {
+
         config.set(name, location);
-        cache.put(name, location);
 
         try {
             config.save(file);
@@ -58,27 +57,33 @@ public class LocationManager {
     }
 
     public Location getLocation(String name) {
-        if (cache.containsKey(name)) {
-            return cache.get(name);
+
+        ConfigurationSection section = config.getConfigurationSection(name);
+
+        String worldName = section.getString("world");
+        World world = Bukkit.getWorld(worldName);
+
+        if (world == null) {
+            world = Bukkit.createWorld(new WorldCreator(worldName));
         }
 
-        Location location = (Location) config.get(name);
-        cache.put(name, location);
-        return location;
+        return new Location(world,
+                section.getDouble("x"),
+                section.getDouble("y"),
+                section.getDouble("z"),
+                (float) section.getDouble("yaw"),
+                (float) section.getDouble("pitch"));
     }
 
     public boolean isSet(String name) {
-        if (cache.containsKey(name)) {
-            return true;
-        }
 
         return config.isSet(name);
     }
 
     public void teleport(Player player, String name) {
+
         if (isSet(name)) {
             player.teleport(getLocation(name));
         }
     }
-
 }
