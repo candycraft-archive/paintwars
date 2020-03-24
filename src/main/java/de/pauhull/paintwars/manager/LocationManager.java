@@ -42,7 +42,7 @@ public class LocationManager {
 
         this.file = worlds[new Random().nextInt(worlds.length)];
 
-        CloudServer.getInstance().setMotdAndUpdate(file.getName().split(".")[0]);
+        CloudServer.getInstance().setMotdAndUpdate(file.getName());
         config = YamlConfiguration.loadConfiguration(file);
     }
 
