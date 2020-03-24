@@ -27,7 +27,7 @@ public class LocationManager {
 
     public LocationManager(PaintWars paintWars) {
 
-        File locationsFolder = new File(paintWars.getDataFolder().getAbsolutePath() + "/locations/");
+        File locationsFolder = new File(paintWars.getDataFolder(), "locations/");
 
         if (!locationsFolder.exists()) {
             locationsFolder.mkdirs();
@@ -35,16 +35,14 @@ public class LocationManager {
 
         File[] worlds = locationsFolder.listFiles((file) -> file.getName().endsWith(".yml"));
 
-        if (worlds == null) {
+        if (worlds == null || worlds.length == 0) {
             Bukkit.shutdown();
             return;
         }
 
-        Random random = new Random();
-        File worldFile = worlds[random.nextInt(worlds.length)];
-        this.file = worldFile;
+        this.file = worlds[new Random().nextInt(worlds.length)];
 
-        CloudServer.getInstance().setMotdAndUpdate(worldFile.getName().split(".")[0]);
+        CloudServer.getInstance().setMotdAndUpdate(file.getName().split(".")[0]);
         config = YamlConfiguration.loadConfiguration(file);
     }
 
