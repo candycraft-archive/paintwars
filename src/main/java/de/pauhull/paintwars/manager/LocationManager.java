@@ -41,7 +41,7 @@ public class LocationManager {
         }
 
         this.file = worlds[new Random().nextInt(worlds.length)];
-        String motd = file.getName().split(".")[0];
+        String motd = file.getName().split("\\.")[0];
         CloudServer.getInstance().setMotdAndUpdate(motd);
         config = YamlConfiguration.loadConfiguration(file);
     }
