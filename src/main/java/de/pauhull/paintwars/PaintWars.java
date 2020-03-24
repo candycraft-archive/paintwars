@@ -15,7 +15,10 @@ import de.pauhull.paintwars.manager.ItemManager;
 import de.pauhull.paintwars.manager.LocationManager;
 import de.pauhull.paintwars.manager.TopPlayerManager;
 import de.pauhull.paintwars.phase.GamePhaseHandler;
-import de.pauhull.paintwars.util.*;
+import de.pauhull.paintwars.util.CoinUtil;
+import de.pauhull.paintwars.util.HeadCache;
+import de.pauhull.paintwars.util.Selection;
+import de.pauhull.paintwars.util.UUIDFetcher;
 import de.pauhull.scoreboard.ScoreboardManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -166,8 +169,6 @@ public class PaintWars extends JavaPlugin {
         this.woolBlocks = countWoolBlocks(gameArea);
 
         this.topPlayerManager = new TopPlayerManager(this);
-
-        new TeleportFix(this, this.getServer());
 
         new SetLocationCommand(this);
         new StartCommand(this);
