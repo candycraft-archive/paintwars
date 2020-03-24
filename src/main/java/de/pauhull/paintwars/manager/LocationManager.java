@@ -33,7 +33,7 @@ public class LocationManager {
             locationsFolder.mkdirs();
         }
 
-        File[] worlds = locationsFolder.listFiles((file) -> file.getName().endsWith(".yml"));
+        File[] worlds = locationsFolder.listFiles();
 
         if (worlds == null || worlds.length == 0) {
             Bukkit.shutdown();
