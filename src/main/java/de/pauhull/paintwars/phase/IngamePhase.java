@@ -33,7 +33,7 @@ public class IngamePhase extends GamePhase {
     private static Random random = new Random();
 
     @Getter
-    private static Map<String, Double> percentages = new HashMap<>();
+    private static volatile Map<String, Double> percentages = new HashMap<>();
 
     @Getter
     private Type type = Type.INGAME;
@@ -112,29 +112,33 @@ public class IngamePhase extends GamePhase {
     }
 
     private void countBlocks() {
-        double uncolored = 0, red = 0, green = 0, blue = 0, yellow = 0;
-        for (Block block : woolBlocks) {
-            if (block.getType() == Material.WOOL) {
-                if (block.getData() == Team.RED.getDyeColor().getWoolData()) {
-                    red++;
-                } else if (block.getData() == Team.GREEN.getDyeColor().getWoolData()) {
-                    green++;
-                } else if (block.getData() == Team.BLUE.getDyeColor().getWoolData()) {
-                    blue++;
-                } else if (block.getData() == Team.YELLOW.getDyeColor().getWoolData()) {
-                    yellow++;
-                } else {
-                    uncolored++;
+        PaintWars.getInstance().getExecutorService().execute(() -> {
+
+            double uncolored = 0, red = 0, green = 0, blue = 0, yellow = 0;
+            for (Block block : woolBlocks) {
+                if (block.getType() == Material.WOOL) {
+                    if (block.getData() == Team.RED.getDyeColor().getWoolData()) {
+                        red++;
+                    } else if (block.getData() == Team.GREEN.getDyeColor().getWoolData()) {
+                        green++;
+                    } else if (block.getData() == Team.BLUE.getDyeColor().getWoolData()) {
+                        blue++;
+                    } else if (block.getData() == Team.YELLOW.getDyeColor().getWoolData()) {
+                        yellow++;
+                    } else {
+                        uncolored++;
+                    }
                 }
             }
-        }
-        double total = uncolored + red + green + blue + yellow;
+            double total = uncolored + red + green + blue + yellow;
 
-        percentages.put("UNCOLORED", uncolored / total);
-        percentages.put(Team.RED.name(), red / total);
-        percentages.put(Team.GREEN.name(), green / total);
-        percentages.put(Team.BLUE.name(), blue / total);
-        percentages.put(Team.YELLOW.name(), yellow / total);
+            percentages.put("UNCOLORED", uncolored / total);
+            percentages.put(Team.RED.name(), red / total);
+            percentages.put(Team.GREEN.name(), green / total);
+            percentages.put(Team.BLUE.name(), blue / total);
+            percentages.put(Team.YELLOW.name(), yellow / total);
+
+        });
     }
 
     @Override
