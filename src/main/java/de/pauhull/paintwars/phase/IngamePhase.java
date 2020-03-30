@@ -112,6 +112,12 @@ public class IngamePhase extends GamePhase {
     }
 
     private void countBlocks() {
+
+        this.countBlocks(() -> {
+        });
+    }
+
+    private void countBlocks(Runnable onFinish) {
         PaintWars.getInstance().getExecutorService().execute(() -> {
 
             double uncolored = 0, red = 0, green = 0, blue = 0, yellow = 0;
@@ -138,82 +144,85 @@ public class IngamePhase extends GamePhase {
             percentages.put(Team.BLUE.name(), blue / total);
             percentages.put(Team.YELLOW.name(), yellow / total);
 
+            onFinish.run();
         });
     }
 
     @Override
     public void end() {
         super.end();
-        this.countBlocks();
+        this.countBlocks(() -> Bukkit.getScheduler().runTask(PaintWars.getInstance(), () -> {
 
-        Team team = Team.RED;
-        double percentage = Double.NEGATIVE_INFINITY;
-        for (Team check : Team.values()) {
-            if (percentages.get(check.name()) > percentage) {
-                team = check;
-                percentage = percentages.get(check.name());
-            }
-        }
-
-        for (Player player : team.getMembers()) {
-            RandomFireworkGenerator.shootRandomFirework(player.getLocation(), 10);
-        }
-
-        String title = "§7Team " + team.getColoredName() + " §7hat das Spiel §agewonnen§7!";
-        String subTitle;
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-
-            if (team.getMembers().contains(player)) {
-                double coins = CoinUtil.COINS_AFTER_WIN;
-                double credits = CoinUtil.CREDITS_AFTER_WIN;
-                PaintWars.getInstance().getWinningPlayers().add(player.getUniqueId());
-                CoinUtil.addBalance(player.getUniqueId(), coins, credits);
-                subTitle = CoinUtil.buildSubTitle(coins, credits);
-            } else {
-                subTitle = "";
+            Team team = Team.RED;
+            double percentage = Double.NEGATIVE_INFINITY;
+            for (Team check : Team.values()) {
+                if (percentages.get(check.name()) > percentage) {
+                    team = check;
+                    percentage = percentages.get(check.name());
+                }
             }
 
-            player.sendTitle(title, subTitle, 0, 40, 20);
-
-            if (PaintWars.getInstance().getColoredBlocks().containsKey(player.getUniqueId())) {
-                PaintWars.getInstance().getStatsTable().getStats(player.getUniqueId(), stats -> {
-                    if (stats == null) return;
-                    stats.setColoredBlocks(stats.getColoredBlocks() + PaintWars.getInstance().getColoredBlocks().get(player.getUniqueId()).get());
-                    PaintWars.getInstance().getStatsTable().setStats(player.getUniqueId(), stats);
-                    PaintWars.getInstance().getColoredBlocks().remove(player.getUniqueId());
-                });
-            }
-        }
-
-        PaintWars.broadcastMessage("§8§m                                 ");
-        PaintWars.broadcastMessage("§7Team " + team.getColoredName() + "§7 hat das Spiel §agewonnen§7!");
-        PaintWars.broadcastMessage(" ");
-
-        // sort map
-        Comparator<Map.Entry<String, Double>> comparator = (e1, e2) -> {
-            double d1 = e1.getValue();
-            double d2 = e2.getValue();
-            return Double.compare(d1, d2) * -1; // invert so that bigger doubles are at the top
-        };
-        Map<String, Double> sortedMap = percentages.entrySet().stream().sorted(comparator).
-                collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-        for (String teamName : sortedMap.keySet()) {
-            String amount = (int) ((sortedMap.get(teamName) * 10000.0) / 100.0) + "%";
-            if (teamName.equals("UNCOLORED")) {
-                PaintWars.broadcastMessage("§8× §7Ungefärbt: §b" + amount);
-                continue;
+            for (Player player : team.getMembers()) {
+                RandomFireworkGenerator.shootRandomFirework(player.getLocation(), 10);
             }
 
-            Team checkTeam = Team.valueOf(teamName);
-            PaintWars.broadcastMessage("§8× " + checkTeam.getColoredName() + "§7: §b" + amount);
-        }
-        PaintWars.broadcastMessage("§8§m                                 ");
+            String title = "§7Team " + team.getColoredName() + " §7hat das Spiel §agewonnen§7!";
+            String subTitle;
 
-        PaintWars.getInstance().getScoreboardManager().updateTitle("§e§lPaint§6§lWars §8| §7Ende");
+            for (Player player : Bukkit.getOnlinePlayers()) {
 
-        handler.startPhase(EndPhase.class).setStartTime(startTime);
+                if (team.getMembers().contains(player)) {
+                    double coins = CoinUtil.COINS_AFTER_WIN;
+                    double credits = CoinUtil.CREDITS_AFTER_WIN;
+                    PaintWars.getInstance().getWinningPlayers().add(player.getUniqueId());
+                    CoinUtil.addBalance(player.getUniqueId(), coins, credits);
+                    subTitle = CoinUtil.buildSubTitle(coins, credits);
+                } else {
+                    subTitle = "";
+                }
+
+                player.sendTitle(title, subTitle, 0, 40, 20);
+
+                if (PaintWars.getInstance().getColoredBlocks().containsKey(player.getUniqueId())) {
+                    PaintWars.getInstance().getStatsTable().getStats(player.getUniqueId(), stats -> {
+                        if (stats == null) return;
+                        stats.setColoredBlocks(stats.getColoredBlocks() + PaintWars.getInstance().getColoredBlocks().get(player.getUniqueId()).get());
+                        PaintWars.getInstance().getStatsTable().setStats(player.getUniqueId(), stats);
+                        PaintWars.getInstance().getColoredBlocks().remove(player.getUniqueId());
+                    });
+                }
+            }
+
+            PaintWars.broadcastMessage("§8§m                                 ");
+            PaintWars.broadcastMessage("§7Team " + team.getColoredName() + "§7 hat das Spiel §agewonnen§7!");
+            PaintWars.broadcastMessage(" ");
+
+            // sort map
+            Comparator<Map.Entry<String, Double>> comparator = (e1, e2) -> {
+                double d1 = e1.getValue();
+                double d2 = e2.getValue();
+                return Double.compare(d1, d2) * -1; // invert so that bigger doubles are at the top
+            };
+            Map<String, Double> sortedMap = percentages.entrySet().stream().sorted(comparator).
+                    collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            for (String teamName : sortedMap.keySet()) {
+                String amount = (int) ((sortedMap.get(teamName) * 10000.0) / 100.0) + "%";
+                if (teamName.equals("UNCOLORED")) {
+                    PaintWars.broadcastMessage("§8× §7Ungefärbt: §b" + amount);
+                    continue;
+                }
+
+                Team checkTeam = Team.valueOf(teamName);
+                PaintWars.broadcastMessage("§8× " + checkTeam.getColoredName() + "§7: §b" + amount);
+            }
+            PaintWars.broadcastMessage("§8§m                                 ");
+
+            PaintWars.getInstance().getScoreboardManager().updateTitle("§e§lPaint§6§lWars §8| §7Ende");
+
+            handler.startPhase(EndPhase.class).setStartTime(startTime);
+
+        }));
     }
 
     private int chooseNextPowerupTime() {
